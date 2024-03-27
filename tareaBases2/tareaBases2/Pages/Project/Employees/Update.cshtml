@@ -1,0 +1,54 @@
+﻿@page
+@model tareaBases2.Pages.Project.Employees.UpdateModel
+@{
+}
+<br>
+<h2> Editar empleado </h2>
+
+@if (Model.flag == false)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>@Model.message</strong>
+        <button type="button" class="btn-close" data-backdrop="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
+<form method="POST">
+    <input type="hidden" name="id" value="@Model.info.id">
+    <div class="row nb-3">
+        <label class="col-sm-3 col-form-label">Nombre</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="nombre" value="@Model.info.Nombre">
+        </div>
+    </div>
+    <div class="row nb-3">
+        <label class="col-sm-3 col-form-label">Salario</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="salario" value="@Model.info.Salario">
+        </div>
+    </div>
+
+
+    @if (Model.flag == true)
+    {
+        <div class="row nb-3">
+            <div class="col-sm-9">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>@Model.message</strong>
+                    <button type="button" class="btn-close" data-backdrop="alert" aria-label="Cerrar"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row nb-3">
+        <div class="offset-sm-3 col-sm3 d-grid">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-sm-3 d-grid">
+            <a class="btn btn-outline-primary" href="/Project/Employees/Index" role="button">Cancel</a>
+        </div>
+    </div>
+
+
+</form>

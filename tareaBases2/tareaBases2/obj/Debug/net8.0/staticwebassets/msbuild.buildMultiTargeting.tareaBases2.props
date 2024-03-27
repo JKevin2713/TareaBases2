@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\tareaBases2.props" />
+</Project>

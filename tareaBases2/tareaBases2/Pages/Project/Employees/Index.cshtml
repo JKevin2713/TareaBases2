@@ -1,0 +1,35 @@
+﻿@page
+@model tareaBases2.Pages.Project.Employees.IndexModel
+@{
+}
+<br>
+<h2>Table de empleados</h2>
+<a class='btn btn-primary btn-sm' href='/Project/Employees/Create'> New Employee </a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Salario</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.listEmployee)
+        {
+            ///Cambiar atributos 
+            <tr>
+                <td>@item.id</td>
+                <td>@item.Nombre</td>
+                <td>@item.Salario</td>
+                <td>
+
+                    <a class='btn btn-primary btn-sm' href='/Project/Employees/Deteils?id=@item.id'>Deteils</a>
+                    <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
+                    <a class='btn btn-danger btn-sm' href='/Project/Employees/Delete?id=@item.id'>Delete</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
