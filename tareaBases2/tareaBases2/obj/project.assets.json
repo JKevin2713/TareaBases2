@@ -475,11 +475,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\duran\\OneDrive\\Escritorio\\SEMESTRE I 2024\\Bases\\tareaBases2\\tareaBases2\\tareaBases2.csproj",
+      "projectUniqueName": "C:\\Users\\duran\\OneDrive\\Documents\\GitHub\\TareaBases2\\tareaBases2\\tareaBases2\\tareaBases2.csproj",
       "projectName": "tareaBases2",
-      "projectPath": "C:\\Users\\duran\\OneDrive\\Escritorio\\SEMESTRE I 2024\\Bases\\tareaBases2\\tareaBases2\\tareaBases2.csproj",
+      "projectPath": "C:\\Users\\duran\\OneDrive\\Documents\\GitHub\\TareaBases2\\tareaBases2\\tareaBases2\\tareaBases2.csproj",
       "packagesPath": "C:\\Users\\duran\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\duran\\OneDrive\\Escritorio\\SEMESTRE I 2024\\Bases\\tareaBases2\\tareaBases2\\obj\\",
+      "outputPath": "C:\\Users\\duran\\OneDrive\\Documents\\GitHub\\TareaBases2\\tareaBases2\\tareaBases2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\duran\\AppData\\Roaming\\NuGet\\NuGet.Config",

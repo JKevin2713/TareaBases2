@@ -9,63 +9,63 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = tareaBases2
 build_property.RootNamespace = tareaBases2
-build_property.ProjectDir = C:\Users\duran\OneDrive\Escritorio\SEMESTRE I 2024\Bases\tareaBases2\tareaBases2\
+build_property.ProjectDir = C:\Users\duran\OneDrive\Documents\GitHub\TareaBases2\tareaBases2\tareaBases2\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\duran\OneDrive\Escritorio\SEMESTRE I 2024\Bases\tareaBases2\tareaBases2
+build_property.MSBuildProjectDirectory = C:\Users\duran\OneDrive\Documents\GitHub\TareaBases2\tareaBases2\tareaBases2
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Error.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Index.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Privacy.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Project/Account/Login.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Project/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdFxBY2NvdW50XExvZ2luLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Project/Account/Logout.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Project/Account/Logout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdFxBY2NvdW50XExvZ291dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Project/Employees/Create.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Project/Employees/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdFxFbXBsb3llZXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Project/Employees/Delete.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Project/Employees/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdFxFbXBsb3llZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Project/Employees/Index.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Project/Employees/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdFxFbXBsb3llZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Project/Employees/Update.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Project/Employees/Update.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdFxFbXBsb3llZXNcVXBkYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/_ViewImports.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/_ViewStart.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/duran/OneDrive/Escritorio/SEMESTRE I 2024/Bases/tareaBases2/tareaBases2/Pages/Shared/_Layout.cshtml]
+[C:/Users/duran/OneDrive/Documents/GitHub/TareaBases2/tareaBases2/tareaBases2/Pages/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-llx17t2hlt
