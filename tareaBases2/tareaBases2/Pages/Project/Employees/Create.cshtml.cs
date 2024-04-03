@@ -4,6 +4,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
+using tareaBases2.Pages.Project;
+
 
 namespace tareaBases2.Pages.Project.Employees
 {
@@ -11,13 +13,19 @@ namespace tareaBases2.Pages.Project.Employees
     {
         // Objeto para almacenar la información del nuevo empleado
         public infoEmpleyee info = new infoEmpleyee();
-        public jobs infoJobs = new jobs();
+        public jobConnection jobs = new jobConnection();
         // Mensaje de retroalimentación para el usuario
         public string message = "";
         // Bandera para indicar si se creó correctamente el empleado
         public bool flag = false;
         // Método ejecutado al recibir una solicitud POST
         // Llamar al método puestos
+        
+        public void OnGet()
+        {
+            jobs.conexion();
+        }
+        
         public void OnPost()
         {
             string auxIdentificacion = Request.Form["identificacion"];

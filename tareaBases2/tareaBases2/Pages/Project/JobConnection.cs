@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
+namespace tareaBases2.Pages.Project;
 public class jobConnection
 {
     public List<jobs> ListJobs = new List<jobs>();
@@ -29,7 +30,7 @@ public class jobConnection
                             infoJobs.SalarioxHora = readerPuesto.GetDecimal(2);
 
                             ListJobs.Add(infoJobs);
-                            Console.WriteLine(infoJobs.SalarioxHora);
+                            Console.Write(infoJobs.SalarioxHora);
                         }
                     }
                 }
@@ -39,6 +40,11 @@ public class jobConnection
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    public List<jobs> ObtenerListaDeTrabajos()
+    {
+        return ListJobs;
     }
 }
 public class jobs

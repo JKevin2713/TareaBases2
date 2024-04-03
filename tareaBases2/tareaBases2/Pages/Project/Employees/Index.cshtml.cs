@@ -9,14 +9,11 @@ namespace tareaBases2.Pages.Project.Employees
 {
     public class IndexModel : PageModel
     {
-        public jobConnection jobs = new jobConnection();
-       
         public List<infoEmpleyee> listEmployee = new List<infoEmpleyee>();
         public void OnGet()
         {
             try
             {
-                jobs.conexion();
                 string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2;Integrated Security=True;Encrypt=False";
 
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
