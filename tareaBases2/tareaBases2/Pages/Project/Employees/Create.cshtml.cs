@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data;
 using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace tareaBases2.Pages.Project.Employees
@@ -10,35 +11,34 @@ namespace tareaBases2.Pages.Project.Employees
     {
         // Objeto para almacenar la información del nuevo empleado
         public infoEmpleyee info = new infoEmpleyee();
-
+        public jobs infoJobs = new jobs();
         // Mensaje de retroalimentación para el usuario
         public string message = "";
-
         // Bandera para indicar si se creó correctamente el empleado
         public bool flag = false;
-
         // Método ejecutado al recibir una solicitud POST
+        // Llamar al método puestos
         public void OnPost()
         {
+            string auxIdentificacion = Request.Form["identificacion"];
             string auxNombre = Request.Form["nombre"];
-            string auxSalario = Request.Form["salario"];
             int resultCode = 0;
 
             // Validar los datos ingresados
-            if (ValidarNomSal(auxNombre, auxSalario) == false)
+            if (ValidarNomSal(auxIdentificacion, auxNombre) == false)
             {
                 message = "Error en los datos, revise los datos ingresados";
                 return;
             }
             // Asignar los valores validados al objeto infoEmpleyee
-            info.Salario = decimal.Parse(auxSalario);
+            info.Identificacion = int.Parse(auxIdentificacion);
             info.Nombre = auxNombre;
 
             try
             {
 
                 // Cadena de conexión a la base de datos
-                string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea1" +
+                string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2" +
                                           ";Integrated Security=True;Encrypt=False";
 
                 // Establecer una conexión con la base de datos utilizando la cadena de conexión
@@ -48,8 +48,8 @@ namespace tareaBases2.Pages.Project.Employees
                     sqlConnection.Open(); // Abrir la conexión
 
                     string sqlInfo = "INSERT INTO Empleado" +
-                                     "(Nombre, Salario) VALUES" +
-                                     "(@nombre, @salario);";
+                                     "(ValorDocumentoIdentidad, Nombre) VALUES" +
+                                     "(@identificacion, @nombre);";
 
                     // Crear un comando SQL para llamar al procedimiento almacenado "----"
                     using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
@@ -57,8 +57,8 @@ namespace tareaBases2.Pages.Project.Employees
                         //command.CommandType = CommandType.StoredProcedure;
 
                         // Parámetros de entrada
+                        command.Parameters.AddWithValue("@identificacion", info.Identificacion);
                         command.Parameters.AddWithValue("@nombre", info.Nombre);
-                        command.Parameters.AddWithValue("@salario", info.Salario);
                         command.ExecuteNonQuery();
                         //Aca a bajo es para cuando esta en el SP
                         /*
@@ -95,17 +95,17 @@ namespace tareaBases2.Pages.Project.Employees
         }
 
         // Método para validar el nombre y salario ingresados
-        public bool ValidarNomSal(string nombre, string salario)
+        public bool ValidarNomSal(string identificacion, string nombre)
         {
             // Verificar que ambos campos no estén vacíos
-            if (nombre.Length != 0 || salario.Length != 0)
+            if (nombre.Length != 0 || identificacion.Length != 0)
             {
                 // Utilizar expresiones regulares para verificar el formato del nombre y salario
-                if (Regex.IsMatch(nombre, @"^[a-zA-Z\s]+$") && Regex.IsMatch(salario, @"^[0-9]+$"))
+                if (Regex.IsMatch(nombre, @"^[a-zA-Z\s]+$") && Regex.IsMatch(identificacion, @"^[0-9]+$"))
                 {
                     // Convertir el salario a decimal y verificar que sea mayor que cero
-                    decimal AuxSalario = decimal.Parse(salario);
-                    if (AuxSalario > 0)
+                    decimal auxIdentificacion = int.Parse(identificacion);
+                    if (auxIdentificacion > 0)
                     {
                         return true;
                     }

@@ -16,15 +16,26 @@
 
 <form method="post">
     <div class="row nb-3">
+        <label class="col-sm-3 col-form-label">Identidicacion</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="identificacion" value="@Model.info.Identificacion">
+        </div>
+    </div>
+
+    <div class="row nb-3">
         <label class="col-sm-3 col-form-label">Nombre</label>
         <div class="col-sm-6">
             <input type="text" class="form-control" name="nombre" value="@Model.info.Nombre">
         </div>
     </div>
+
     <div class="row nb-3">
-        <label class="col-sm-3 col-form-label">Salario</label>
+        <label class="col-sm-3 col-form-label">Puesto</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="salario" value="@Model.info.Salario">
+            <ng-form>
+                <select>
+                </select>
+            </ng-form>
         </div>
     </div>
 
@@ -43,10 +54,10 @@
 
     <div class="row nb-3">
         <div class="offset-sm-3 col-sm3 d-grid">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Crear empleado</button>
         </div>
         <div class="col-sm-3 d-grid">
-            <a class="btn btn-outline-primary" href="/Project/Employees/Index" role="button">Cancel</a>
+            <a class="btn btn-outline-primary" href="/Project/Employees/Index" role="button">Cancelar</a>
         </div>
     </div>
 

@@ -8,9 +8,12 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>ID Puesto</th>
+            <th>Identificacion</th>
             <th>Nombre</th>
-            <th>Salario</th>
+            <th>Fecha contratacion</th>
+            <th>Saldo vacaciones</th>
+            <th>Activo</th>
             <th>Opciones</th>
         </tr>
     </thead>
@@ -19,11 +22,13 @@
         {
             ///Cambiar atributos 
             <tr>
-                <td>@item.id</td>
+                <td>@item.idPuesto</td>
+                <td>@item.Identificacion</td>
                 <td>@item.Nombre</td>
-                <td>@item.Salario</td>
+                <td>@item.FechaContratacion</td>
+                <td>@item.SaldoVaciones</td>
+                <td>@item.EsActivo</td>
                 <td>
-
                     <a class='btn btn-primary btn-sm' href='/Project/Employees/Deteils?id=@item.id'>Deteils</a>
                     <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
                     <a class='btn btn-danger btn-sm' href='/Project/Employees/Delete?id=@item.id'>Delete</a>
