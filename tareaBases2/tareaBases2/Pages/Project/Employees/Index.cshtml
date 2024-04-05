@@ -1,40 +1,49 @@
 ﻿@page
 @model tareaBases2.Pages.Project.Employees.IndexModel
-@{
-}
-<br>
-<h2>Tabla de empleados</h2>
-<a class='btn btn-primary btn-sm' href='/Project/Employees/Create'> Nuevo empleado </a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID Puesto</th>
-            <th>Identificacion</th>
-            <th>Nombre</th>
-            <th>Fecha contratacion</th>
-            <th>Saldo vacaciones</th>
-            <th>Activo</th>
-            <th>Opciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.listEmployee)
-        {
-            ///Cambiar atributos 
-            <tr>
-                <td>@item.idPuesto</td>
-                <td>@item.Identificacion</td>
-                <td>@item.Nombre</td>
-                <td>@item.FechaContratacion</td>
-                <td>@item.SaldoVaciones</td>
-                <td>@item.EsActivo</td>
-                <td>
-                    <a class='btn btn-primary btn-sm' href='/Project/Employees/Deteils?id=@item.id'>Deteils</a>
-                    <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
-                    <a class='btn btn-danger btn-sm' href='/Project/Employees/Delete?id=@item.id'>Delete</a>
 
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de empleados</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Tabla de empleados</h2>
+        <a class='btn btn-primary btn-sm mb-3' href='/Project/Employees/Create'> Nuevo empleado </a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID Puesto</th>
+                    <th>Identificacion</th>
+                    <th>Nombre</th>
+                    <th>Fecha contratacion</th>
+                    <th>Saldo vacaciones</th>
+                    <th>Activo</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.conexion.listEmployee)
+                {
+                    <tr>
+                        <td>@item.idPuesto</td>
+                        <td>@item.Identificacion</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.FechaContratacion</td>
+                        <td>@item.SaldoVaciones</td>
+                        <td>@item.EsActivo</td>
+                        <td>
+                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Details</a>
+                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
+                            <a class='btn btn-danger btn-sm' href='/Project/Employees/Delete?id=@item.id'>Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

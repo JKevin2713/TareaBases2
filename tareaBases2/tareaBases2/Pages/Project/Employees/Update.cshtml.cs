@@ -7,6 +7,7 @@ namespace tareaBases2.Pages.Project.Employees
 {
     public class UpdateModel : PageModel
     {
+        public jobConnection jobs = new jobConnection();
         public infoEmpleyee info = new infoEmpleyee();
         public string message = "";
         public bool flag = false;
@@ -17,6 +18,7 @@ namespace tareaBases2.Pages.Project.Employees
 
             try
             {
+                jobs.conexion();
                 string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2;Integrated Security=True;Encrypt=False";
 
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))

@@ -1,66 +1,78 @@
 ﻿@page
 @model tareaBases2.Pages.Project.Employees.CreateModel
-@{
-}
 
-<br>
-<h2> Crear nuevo empleado </h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear nuevo empleado</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Crear nuevo empleado</h2>
 
-@if (Model.flag == false)
-{
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>@Model.message</strong>
-        <button type="button" class="btn-close" data-backdrop="alert" aria-label="Cerrar"></button>
-    </div>
-}
+        @if (Model.flag == false)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.message</strong>
+                <button type="button" class="btn-close" data-backdrop="alert" aria-label="Cerrar"></button>
+            </div>
+        }
 
-<form method="post">
-    <div class="row nb-3">
-        <label class="col-sm-3 col-form-label">Identidicacion</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" name="identificacion" value="@Model.info.Identificacion">
-        </div>
-    </div>
-
-    <div class="row nb-3">
-        <label class="col-sm-3 col-form-label">Nombre</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" name="nombre" value="@Model.info.Nombre">
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <label class="col-sm-3 col-form-label">Puesto</label>
-        <div class="col-sm-6">
-            <select class="form-select" id="puesto" name="puesto">
-                <option value="">Selecciona un puesto</option>
-                @foreach (var puesto in Model.jobs.ListJobs)
-                {
-                    <option value="@puesto.NombrePuesto">@puesto.NombrePuesto</option>
-                }
-            </select>
-        </div>
-    </div>
-
-
-    @if (Model.flag == true)
-    {
-        <div class="row nb-3">
-            <div class="col-sm-9">
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>@Model.message</strong>
-                    <button type="button" class="btn-close" data-backdrop="alert" aria-label="Cerrar"></button>
+        <form method="post">
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Identificación</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="identificacion" value="@Model.info.Identificacion">
                 </div>
             </div>
-        </div>
-    }
 
-    <div class="row nb-3">
-        <div class="offset-sm-3 col-sm3 d-grid">
-            <button type="submit" class="btn btn-primary">Crear empleado</button>
-        </div>
-        <div class="col-sm-3 d-grid">
-            <a class="btn btn-outline-primary" href="/Project/Employees/Index" role="button">Cancelar</a>
-        </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Nombre</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="nombre" value="@Model.info.Nombre">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Puesto</label>
+                <div class="col-sm-6">
+                    <select class="form-select" id="puesto" name="puesto">
+                        <option value="">Selecciona un puesto</option>
+                        @foreach (var puesto in Model.jobs.ListJobs)
+                        {
+                            <option value="@puesto.id">@puesto.NombrePuesto</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            @if (Model.flag == true)
+            {
+                <div class="row mb-3">
+                    <div class="col-sm-9">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>@Model.message</strong>
+                            <button type="button" class="btn-close" data-backdrop="alert" aria-label="Cerrar"></button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="row mb-3">
+                <div class="offset-sm-3 col-sm-3 d-grid">
+                    <button type="submit" class="btn btn-primary">Crear empleado</button>
+                </div>
+
+                <div class="col-sm-3 d-grid">
+                    <a class="btn btn-outline-primary" href="/Project/Employees/Index" role="button">Cancelar</a>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
