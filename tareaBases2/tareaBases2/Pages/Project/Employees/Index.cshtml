@@ -13,6 +13,44 @@
     <div class="container">
         <h2>Tabla de empleados</h2>
         <a class='btn btn-primary btn-sm mb-3' href='/Project/Employees/Create'> Nuevo empleado </a>
+        <form method="post">
+            <input type="text" name="buscar" id="buscarInput" />
+            <button type="submit">Filtrar</button>
+        </form>
+        @if (Model.ResultadoFiltrado != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID Puesto</th>
+                        <th>Identificacion</th>
+                        <th>Nombre</th>
+                        <th>Fecha contratacion</th>
+                        <th>Saldo vacaciones</th>
+                        <th>Activo</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ResultadoFiltrado)
+                    {
+                        <tr>
+                            <td>@item.idPuesto</td>
+                            <td>@item.Identificacion</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.FechaContratacion</td>
+                            <td>@item.SaldoVaciones</td>
+                            <td>@item.EsActivo</td>
+                            <td>
+                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Details</a>
+                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
+                                <a class='btn btn-danger btn-sm' href='/Project/Employees/Delete?id=@item.id'>Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
         <table class="table">
             <thead>
                 <tr>
