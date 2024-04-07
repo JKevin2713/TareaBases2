@@ -13,52 +13,63 @@ namespace tareaBases2.Pages.Project.Employees
     public class IndexModel : PageModel
     {
         public connection conexion = new connection();
-        public List<infoEmpleyee> ResultadoFiltrado = new List<infoEmpleyee>();
         public List<infoEmpleyee> listaFiltrada = new List<infoEmpleyee>();
 
         public void OnGet()
         {
-            conexion.connectionTable();
-
+            buscarInput("");
         }
         
         public void OnPost(string buscar)
         {
             // Lógica para filtrar con el valor recibido
-            conexion.connectionTable();
-            ResultadoFiltrado = conexion.listEmployee.Where(e => e.Nombre.Contains(buscar)).ToList();
-            Console.WriteLine(ResultadoFiltrado.Count);
+            buscarInput(buscar);
         }
-        public void jee(string buscar)
+        public void buscarInput(string buscar)
         {
-            conexion.connectionTable(); 
-            Console.WriteLine(buscar);
-            if (validarBusquedaNombre(buscar) == true)
-            { 
-                foreach (infoEmpleyee i in conexion.listEmployee)
+            string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2;Integrated Security=True;Encrypt=False";
+
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                string sqlRead = "";
+
+                if (validarBusquedaNombre(buscar) == true)
                 {
-                    if(i.Nombre == buscar)
+                    sqlRead = "SELECT * FROM Empleado WHERE Nombre LIKE '%' + @buscar + '%';";
+                }
+                else if (validarBusquedaCedula(buscar) == true)
+                {
+                    sqlRead = "SELECT * FROM Empleado WHERE ValorDocumentoIdentidad LIKE '%' + @buscar + '%';";
+                }
+                else
+                {
+                    sqlRead = "SELECT * FROM Empleado;";
+                }
+
+                sqlConnection.Open();
+                using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
+                { 
+                    command.Parameters.AddWithValue("@buscar", buscar);
+                    
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        listaFiltrada.Add(i);
-                        Console.WriteLine(i.Nombre);
+                        while (reader.Read())
+                        {
+                            infoEmpleyee info = new infoEmpleyee();
+                            info.id = reader.GetInt32(0);
+                            info.idPuesto = reader.GetInt32(1);
+                            info.Identificacion = reader.GetInt32(2);
+                            info.Nombre = reader.GetString(3);
+                            info.FechaContratacion = reader.GetDateTime(4);
+                            info.SaldoVaciones = reader.GetDecimal(5);
+                            info.EsActivo = reader.GetBoolean(6);
+
+                            listaFiltrada.Add(info);
+                            Console.Write(info);
+                        }
                     }
                 }
-            }
-            else if(validarBusquedaCedula(buscar) == true)
-            {
-                int auxBuscar = int.Parse(buscar);
-                foreach (infoEmpleyee i in conexion.listEmployee)
-                {
-                    if (i.Identificacion == auxBuscar)
-                    {
-                        listaFiltrada.Add(i);
-                        Console.WriteLine(i.Identificacion);
-                    }
-                }
-            }
-            else
-            {
-               OnGet();
+                sqlConnection.Close();
             }
         }
         public bool validarBusquedaNombre(string buscar)
@@ -72,6 +83,7 @@ namespace tareaBases2.Pages.Project.Employees
                 }
             }
             return false;
+
         }
         public bool validarBusquedaCedula(string buscar)
         {
