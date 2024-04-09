@@ -44,11 +44,12 @@ namespace tareaBases2.Pages.Project.Employees
                 else
                 {
                     sqlRead = "SELECT * FROM Empleado;";
+                    buscar = "";
                 }
 
                 sqlConnection.Open();
                 using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
-                { 
+                {
                     command.Parameters.AddWithValue("@buscar", buscar);
                     
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -75,27 +76,40 @@ namespace tareaBases2.Pages.Project.Employees
         public bool validarBusquedaNombre(string buscar)
         {
             // Verificar que ambos campos no estén vacíos
-            if (buscar.Length != 0)
+            try
             {
-                if (Regex.IsMatch(buscar, @"^[a-zA-Z\s]+$"))
+                if (buscar.Length != 0)
                 {
-                    return true;
+                    if (Regex.IsMatch(buscar, @"^[a-zA-Z\s]+$"))
+                    {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
-
+            catch
+            {
+                return false;
+            }
         }
         public bool validarBusquedaCedula(string buscar)
         {
-            // Verificar que ambos campos no estén vacíos
-            if (buscar.Length != 0)
-            {
-                if (Regex.IsMatch(buscar, @"^[0-9]+$"))
+            try
+            { 
+                // Verificar que ambos campos no estén vacíos
+                if (buscar.Length != 0)
                 {
-                    return true;
+                    if (Regex.IsMatch(buscar, @"^[0-9]+$"))
+                    {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
+            catch
+            {
+                return false;
+            }
         }
 
     }

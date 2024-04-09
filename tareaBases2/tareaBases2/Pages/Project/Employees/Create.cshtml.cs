@@ -25,11 +25,14 @@ namespace tareaBases2.Pages.Project.Employees
         {
             jobs.conexion();
         }
-        
+
         public void OnPost()
         {
             string auxIdentificacion = Request.Form["identificacion"];
             string auxNombre = Request.Form["nombre"];
+            string puesto = Request.Form["puesto"];
+            DateTime fechaContratacion = DateTime.Now;
+
             int resultCode = 0;
 
             // Validar los datos ingresados
@@ -39,8 +42,12 @@ namespace tareaBases2.Pages.Project.Employees
                 return;
             }
             // Asignar los valores validados al objeto infoEmpleyee
+            info.idPuesto = int.Parse(puesto);
             info.Identificacion = int.Parse(auxIdentificacion);
             info.Nombre = auxNombre;
+            info.FechaContratacion = fechaContratacion;
+            info.SaldoVaciones = 0;
+            info.EsActivo = true;
 
             try
             {
@@ -56,17 +63,21 @@ namespace tareaBases2.Pages.Project.Employees
                     sqlConnection.Open(); // Abrir la conexión
 
                     string sqlInfo = "INSERT INTO Empleado" +
-                                     "(ValorDocumentoIdentidad, Nombre) VALUES" +
-                                     "(@identificacion, @nombre);";
+                                     "(IdPuesto, ValorDocumentoIdentidad, Nombre, FechaContratacion, SaldoVacaciones, EsActivo) VALUES" +
+                                     "(@idPuesto, @identificacion, @nombre, @fechaContratacion, @SaldoVaciones, @EsActivo );";
 
                     // Crear un comando SQL para llamar al procedimiento almacenado "----"
                     using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
-                    {
+                    {;
                         //command.CommandType = CommandType.StoredProcedure;
 
                         // Parámetros de entrada
+                        command.Parameters.AddWithValue("@idPuesto", info.idPuesto);
                         command.Parameters.AddWithValue("@identificacion", info.Identificacion);
                         command.Parameters.AddWithValue("@nombre", info.Nombre);
+                        command.Parameters.AddWithValue("@fechaContratacion", info.FechaContratacion);
+                        command.Parameters.AddWithValue("@SaldoVaciones", info.SaldoVaciones);
+                        command.Parameters.AddWithValue("@EsActivo", info.EsActivo);
                         command.ExecuteNonQuery();
                         //Aca a bajo es para cuando esta en el SP
                         /*
