@@ -13,11 +13,13 @@ namespace tareaBases2.Pages.Project.Employees
     public class IndexModel : PageModel
     {
         public connection conexion = new connection();
+        public XML xmlLoad = new XML(); 
         public List<infoEmpleyee> listaFiltrada = new List<infoEmpleyee>();
 
         public void OnGet()
         {
             buscarInput("");
+            xmlLoad.Cargar();
         }
         
         public void OnPost(string buscar)
@@ -62,7 +64,7 @@ namespace tareaBases2.Pages.Project.Employees
                             info.Identificacion = reader.GetInt32(2);
                             info.Nombre = reader.GetString(3);
                             info.FechaContratacion = reader.GetDateTime(4);
-                            info.SaldoVaciones = reader.GetDecimal(5);
+                            info.SaldoVaciones = reader.GetInt16(5);
                             info.EsActivo = reader.GetBoolean(6);
 
                             listaFiltrada.Add(info);

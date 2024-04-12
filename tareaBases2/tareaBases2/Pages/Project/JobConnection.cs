@@ -16,7 +16,7 @@ public class jobConnection
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
             {
                 sqlConnection.Open();
-                string sqlReadPuesto = "SELECT * FROM Puesto";
+                string sqlReadPuesto = "SELECT * FROM Puestos";
 
                 using (SqlCommand command = new SqlCommand(sqlReadPuesto, sqlConnection))
                 {
@@ -40,11 +40,6 @@ public class jobConnection
         {
             Console.WriteLine(ex.Message);
         }
-    }
-
-    public List<jobs> ObtenerListaDeTrabajos()
-    {
-        return ListJobs;
     }
 }
 public class jobs

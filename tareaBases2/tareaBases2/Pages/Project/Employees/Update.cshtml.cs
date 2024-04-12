@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using static XML;
 
 namespace tareaBases2.Pages.Project.Employees
 {
@@ -38,7 +39,7 @@ namespace tareaBases2.Pages.Project.Employees
                                 info.Identificacion = reader.GetInt32(2);
                                 info.Nombre = reader.GetString(3);
                                 info.FechaContratacion = reader.GetDateTime(4);
-                                info.SaldoVaciones = reader.GetDecimal(5);
+                                info.SaldoVaciones = reader.GetInt16(5);
                             }
                         }
                     }
@@ -52,6 +53,7 @@ namespace tareaBases2.Pages.Project.Employees
         public void OnPost()
         {
             String id = Request.Query["id"];
+            string puesto = Request.Form["puesto"];
             string auxIdentificacion = Request.Form["identificacion"];
             string auxNombre = Request.Form["nombre"];
             int resultCode = 0;
@@ -65,20 +67,22 @@ namespace tareaBases2.Pages.Project.Employees
             // Asignar los valores validados al objeto infoEmpleyee
             info.Identificacion = int.Parse(auxIdentificacion);
             info.Nombre = auxNombre;
+            info.idPuesto = int.Parse(puesto);
 
             try
             {
-                string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea1" +
+                string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2" +
                                           ";Integrated Security=True;Encrypt=False";
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
                     string sqlInfo = "UPDATE Empleado " +
-                                    "SET ValorDocumentoIdentidad=@identificacion, Nombre=@nombre " +
+                                    "SET idPuesto=@idPuesto, ValorDocumentoIdentidad=@identificacion, Nombre=@nombre " +
                                     "WHERE id=@id;";
                     using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
                     {
                         command.Parameters.AddWithValue("@id", id);
+                        command.Parameters.AddWithValue("@idPuesto", info.idPuesto);
                         command.Parameters.AddWithValue("@identificacion", info.Identificacion);
                         command.Parameters.AddWithValue("@nombre", info.Nombre);
                         command.ExecuteNonQuery();

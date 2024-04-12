@@ -10,7 +10,7 @@
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
             sqlConnection.Open();
-            string sqlInfo = "DELETE FROM Empleado " +
+            string sqlInfo = "UPDATE Empleado SET EsActivo=0" +
                             "WHERE id=@id;";
             using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
             {
