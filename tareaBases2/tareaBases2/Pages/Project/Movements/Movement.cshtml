@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Detalles del empleado</h2>
+        <h2>Detalles de movimientos</h2>
 
         <form method="POST">
             <div class="row mb-3">
@@ -42,7 +42,7 @@
                         <th>Nombre de movimiento</th>
                         <th>Monto movimiento</th>
                         <th>Nuevo monto</th>
-                        <th>Usuaria</th>
+                        <th>Usuario</th>
                         <th>IP</th>
                         <th>Tiempo</th>
                     </tr>
@@ -50,12 +50,14 @@
                     <tbody>
                         @foreach (var item in Model.listaMovimientos)
                         {
+                        var tipoMovimiento = Model.listaTipoMovimiento.FirstOrDefault(t => t.id == item.IdTipoMovimiento);
+                        var usuario = Model.listaUsuario.FirstOrDefault(t => t.id == item.PostByUser);
                             <tr>
                                 <td>@item.Fecha</td>
-                                <td>@item.IdTipoMovimiento</td>
+                                <td>@tipoMovimiento.Nombre</td>
                                 <td>@item.Monto</td>
                                 <td>@item.NuevoSaldo</td>
-                                <td>@item.PostByUser</td>
+                                <td>@usuario.Username</td>
                                 <td>@item.PostInIp</td>
                                 <td>@item.PostTime</td>
                             </tr>

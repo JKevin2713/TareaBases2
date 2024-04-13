@@ -10,6 +10,8 @@ namespace tareaBases2.Pages.Project.Movements
         public jobs infoJobs = new jobs();
         public empleyee infoEmpleyee = new empleyee();
         public List<movements> listaMovimientos = new List<movements>();
+        public List<tipoMovimiento> listaTipoMovimiento = new List<tipoMovimiento>();
+        public List<usuario> listaUsuario = new List<usuario>();
         public string message = "";
         public void OnGet()
         {
@@ -20,6 +22,7 @@ namespace tareaBases2.Pages.Project.Movements
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
+
                     String id = Request.Query["id"];
                     string sqlRead = "SELECT * FROM Empleado WHERE id=@id";
 
@@ -42,7 +45,7 @@ namespace tareaBases2.Pages.Project.Movements
                     }
 
                     String identificacion = infoEmpleyee.Identificacion.ToString();
-                    sqlRead = "SELECT * FROM Movimietos WHERE ValorDocId=@identificacion";
+                    sqlRead = "SELECT * FROM Movimiento WHERE ValorDocId=@identificacion";
 
                     using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
                     {
@@ -59,15 +62,60 @@ namespace tareaBases2.Pages.Project.Movements
                                 infoMovements.Monto = reader.GetDecimal(4);
                                 infoMovements.NuevoSaldo = reader.GetDecimal(5);
                                 infoMovements.PostByUser = reader.GetInt32(6);
-                                infoMovements.PostInIp = reader.GetInt32(7);
+                                infoMovements.PostInIp = reader.GetString(7);
                                 infoMovements.PostTime = reader.GetDateTime(8);
 
                                 listaMovimientos.Add(infoMovements);
+                                Console.WriteLine(infoMovements);
+                            }
+                        }
+                    }
+                    foreach(var info in listaMovimientos)
+                    {
+                        String idTipoMovimiento = info.IdTipoMovimiento.ToString();
+                        sqlRead = "SELECT * FROM TipoMovimiento WHERE id=@idTipoMovimiento";
+
+                        using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
+                        {
+                            command.Parameters.AddWithValue("@IdTipoMovimiento", idTipoMovimiento);
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    tipoMovimiento infoTipoMovimiento = new tipoMovimiento();
+
+                                    infoTipoMovimiento.id = reader.GetInt32(0);
+                                    infoTipoMovimiento.Nombre = reader.GetString(1);
+                                    infoTipoMovimiento.TipoAccion = reader.GetString(2);
+
+                                    listaTipoMovimiento.Add(infoTipoMovimiento);
+                                    Console.WriteLine(infoTipoMovimiento);
+                                }
                             }
                         }
 
+                        String postByUser = info.PostByUser.ToString();
+                        sqlRead = "SELECT * FROM Usuario WHERE id=@postByUser";
+
+                        using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
+                        {
+                            command.Parameters.AddWithValue("@postByUser", postByUser);
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    usuario infoUsuario = new usuario();
+
+                                    infoUsuario.id = reader.GetInt32(0);
+                                    infoUsuario.Username = reader.GetString(1);
+                                    infoUsuario.Password = reader.GetString(2);
+
+                                    listaUsuario.Add(infoUsuario);
+                                    Console.WriteLine(infoUsuario);
+                                }
+                            }
+                        }
                     }
-                   
                     sqlConnection.Close();
                 }
             }

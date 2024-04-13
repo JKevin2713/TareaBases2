@@ -7,13 +7,15 @@ using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.RegularExpressions;
+using static XML;
 
 namespace tareaBases2.Pages.Project.Employees
 {
     public class IndexModel : PageModel
     {
         public connection conexion = new connection();
-        public XML xmlLoad = new XML(); 
+        public XML xmlLoad = new XML();
+        public List<movements> listaMovimientos = new List<movements>();
         public List<empleyee> listaFiltrada = new List<empleyee>();
 
         public void OnGet()

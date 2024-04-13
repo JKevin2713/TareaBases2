@@ -25,6 +25,20 @@ public class movements
     public decimal Monto;
     public decimal NuevoSaldo;
     public Int32 PostByUser;
-    public Int32 PostInIp;
+    public string PostInIp;
     public DateTime PostTime;
+}
+
+public class tipoMovimiento
+{
+    public Int32 id;
+    public string Nombre;
+    public string TipoAccion;
+}
+
+public class usuario
+{
+    public Int32 id;
+    public string Username;
+    public string Password;
 }
