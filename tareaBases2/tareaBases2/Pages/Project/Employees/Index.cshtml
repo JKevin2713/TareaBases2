@@ -8,6 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabla de empleados</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title>Desactivar Empleado</title>
+    <script>
+        function confirmarDesactivacion(item) {
+            if (confirm("¿Estás seguro de que deseas desactivar este empleado?")) {
+                // Si el usuario confirma, enviar el formulario
+                window.location.href = '/Project/Employees/Delete?id=' + item;
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -44,7 +54,7 @@
                         <td>
                             <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Details</a>
                             <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
-                            <a class='btn btn-danger btn-sm' href='/Project/Employees/Delete?id=@item.id'>Delete</a>
+                            <a class='btn btn-danger btn-sm'  onclick='confirmarDesactivacion(@item.id)'>Delete</a>
                         </td>
                     </tr>
                 }
@@ -65,7 +75,7 @@
                             <td>
                                 <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Details</a>
                                 <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
-                                <a class='btn btn-danger btn-sm' href='/Project/Employees/Delete?id=@item.id'>Delete</a>
+                                <a class='btn btn-danger btn-sm' onclick='confirmarDesactivacion(@item)'>Delete</a>
                             </td>
                         </tr>
                     }
