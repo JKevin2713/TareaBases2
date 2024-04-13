@@ -52,9 +52,11 @@
                         <td>@item.SaldoVaciones</td>
                         <td>@item.EsActivo</td>
                         <td>
-                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Details</a>
-                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
-                            <a class='btn btn-danger btn-sm'  onclick='confirmarDesactivacion(@item.id)'>Delete</a>
+                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Detalles</a>
+                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Modificar</a>
+                            <a class='btn btn-success btn-sm' href='/Project/Movements/Movement?id=@item.id'>Movimientos</a>
+                            <a class='btn btn-success btn-sm' href='/Project/Movements/InsertMovement?id=@item.id'>Insertar Movimiento</a>
+                            <a class='btn btn-danger btn-sm'  onclick='confirmarDesactivacion(@item.id)'>Eliminar</a>
                         </td>
                     </tr>
                 }

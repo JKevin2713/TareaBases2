@@ -4,10 +4,11 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using static XML;
 
 public class connection
 {
-    public List<infoEmpleyee> listEmployee = new List<infoEmpleyee>();
+    public List<empleyee> listEmployee = new List<empleyee>();
 
     public void connectionTable()
     {
@@ -26,17 +27,17 @@ public class connection
                     {
                         while (reader.Read())
                         {
-                            infoEmpleyee info = new infoEmpleyee();
-                            info.id = reader.GetInt32(0);
-                            info.idPuesto = reader.GetInt32(1);
-                            info.Identificacion = reader.GetInt32(2);
-                            info.Nombre = reader.GetString(3);
-                            info.FechaContratacion = reader.GetDateTime(4);
-                            info.SaldoVaciones = reader.GetDecimal(5);
-                            info.EsActivo = reader.GetBoolean(6);
+                            empleyee infoEmpleyee = new empleyee();
+                            infoEmpleyee.id = reader.GetInt32(0);
+                            infoEmpleyee.idPuesto = reader.GetInt32(1);
+                            infoEmpleyee.Identificacion = reader.GetInt32(2);
+                            infoEmpleyee.Nombre = reader.GetString(3);
+                            infoEmpleyee.FechaContratacion = reader.GetDateTime(4);
+                            infoEmpleyee.SaldoVaciones = reader.GetDecimal(5);
+                            infoEmpleyee.EsActivo = reader.GetBoolean(6);
 
-                            listEmployee.Add(info);
-                            Console.Write(info);
+                            listEmployee.Add(infoEmpleyee);
+                            Console.Write(infoEmpleyee);
                         }
                     }
                 }
@@ -48,15 +49,4 @@ public class connection
             Console.WriteLine(ex.Message);
         }
     }
-}
-public class infoEmpleyee
-{
-    public Int32 id;
-    public Int32 idPuesto;
-    public int Identificacion;
-    public string Nombre;
-    public DateTime FechaContratacion;
-    public decimal SaldoVaciones;
-    public bool EsActivo;
-
 }

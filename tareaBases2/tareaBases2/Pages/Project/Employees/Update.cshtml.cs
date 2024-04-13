@@ -9,7 +9,7 @@ namespace tareaBases2.Pages.Project.Employees
     public class UpdateModel : PageModel
     {
         public jobConnection jobs = new jobConnection();
-        public infoEmpleyee info = new infoEmpleyee();
+        public empleyee infoEmpleyee = new empleyee();
         public string message = "";
         public bool flag = false;
 
@@ -34,12 +34,12 @@ namespace tareaBases2.Pages.Project.Employees
                         {
                             while (reader.Read())
                             {
-                                info.id = reader.GetInt32(0);
-                                info.idPuesto = reader.GetInt32(1);
-                                info.Identificacion = reader.GetInt32(2);
-                                info.Nombre = reader.GetString(3);
-                                info.FechaContratacion = reader.GetDateTime(4);
-                                info.SaldoVaciones = reader.GetInt16(5);
+                                infoEmpleyee.id = reader.GetInt32(0);
+                                infoEmpleyee.idPuesto = reader.GetInt32(1);
+                                infoEmpleyee.Identificacion = reader.GetInt32(2);
+                                infoEmpleyee.Nombre = reader.GetString(3);
+                                infoEmpleyee.FechaContratacion = reader.GetDateTime(4);
+                                infoEmpleyee.SaldoVaciones = reader.GetInt16(5);
                             }
                         }
                     }
@@ -65,9 +65,9 @@ namespace tareaBases2.Pages.Project.Employees
                 return;
             }
             // Asignar los valores validados al objeto infoEmpleyee
-            info.Identificacion = int.Parse(auxIdentificacion);
-            info.Nombre = auxNombre;
-            info.idPuesto = int.Parse(puesto);
+            infoEmpleyee.Identificacion = int.Parse(auxIdentificacion);
+            infoEmpleyee.Nombre = auxNombre;
+            infoEmpleyee.idPuesto = int.Parse(puesto);
 
             try
             {
@@ -82,9 +82,9 @@ namespace tareaBases2.Pages.Project.Employees
                     using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
                     {
                         command.Parameters.AddWithValue("@id", id);
-                        command.Parameters.AddWithValue("@idPuesto", info.idPuesto);
-                        command.Parameters.AddWithValue("@identificacion", info.Identificacion);
-                        command.Parameters.AddWithValue("@nombre", info.Nombre);
+                        command.Parameters.AddWithValue("@idPuesto", infoEmpleyee.idPuesto);
+                        command.Parameters.AddWithValue("@identificacion", infoEmpleyee.Identificacion);
+                        command.Parameters.AddWithValue("@nombre", infoEmpleyee.Nombre);
                         command.ExecuteNonQuery();
                     }
                 }

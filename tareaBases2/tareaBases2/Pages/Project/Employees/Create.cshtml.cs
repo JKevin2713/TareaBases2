@@ -12,7 +12,7 @@ namespace tareaBases2.Pages.Project.Employees
     public class CreateModel : PageModel
     {
         // Objeto para almacenar la información del nuevo empleado
-        public infoEmpleyee info = new infoEmpleyee();
+        public empleyee infoEmpleyee = new empleyee();
         public jobConnection jobs = new jobConnection();
         // Mensaje de retroalimentación para el usuario
         public string message = "";
@@ -42,12 +42,12 @@ namespace tareaBases2.Pages.Project.Employees
                 return;
             }
             // Asignar los valores validados al objeto infoEmpleyee
-            info.idPuesto = int.Parse(puesto);
-            info.Identificacion = int.Parse(auxIdentificacion);
-            info.Nombre = auxNombre;
-            info.FechaContratacion = fechaContratacion;
-            info.SaldoVaciones = 0;
-            info.EsActivo = true;
+            infoEmpleyee.idPuesto = int.Parse(puesto);
+            infoEmpleyee.Identificacion = int.Parse(auxIdentificacion);
+            infoEmpleyee.Nombre = auxNombre;
+            infoEmpleyee.FechaContratacion = fechaContratacion;
+            infoEmpleyee.SaldoVaciones = 0;
+            infoEmpleyee.EsActivo = true;
 
             try
             {
@@ -72,12 +72,12 @@ namespace tareaBases2.Pages.Project.Employees
                         //command.CommandType = CommandType.StoredProcedure;
 
                         // Parámetros de entrada
-                        command.Parameters.AddWithValue("@idPuesto", info.idPuesto);
-                        command.Parameters.AddWithValue("@identificacion", info.Identificacion);
-                        command.Parameters.AddWithValue("@nombre", info.Nombre);
-                        command.Parameters.AddWithValue("@fechaContratacion", info.FechaContratacion);
-                        command.Parameters.AddWithValue("@SaldoVaciones", info.SaldoVaciones);
-                        command.Parameters.AddWithValue("@EsActivo", info.EsActivo);
+                        command.Parameters.AddWithValue("@idPuesto", infoEmpleyee.idPuesto);
+                        command.Parameters.AddWithValue("@identificacion", infoEmpleyee.Identificacion);
+                        command.Parameters.AddWithValue("@nombre", infoEmpleyee.Nombre);
+                        command.Parameters.AddWithValue("@fechaContratacion", infoEmpleyee.FechaContratacion);
+                        command.Parameters.AddWithValue("@SaldoVaciones", infoEmpleyee.SaldoVaciones);
+                        command.Parameters.AddWithValue("@EsActivo", infoEmpleyee.EsActivo);
                         command.ExecuteNonQuery();
                         //Aca a bajo es para cuando esta en el SP
                         /*

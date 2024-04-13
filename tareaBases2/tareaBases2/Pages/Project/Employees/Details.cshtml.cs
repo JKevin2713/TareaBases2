@@ -7,7 +7,7 @@ namespace tareaBases2.Pages.Project.Employees
     public class DetailsModel : PageModel
     {
         public jobs infoJobs = new jobs();
-        public infoEmpleyee info = new infoEmpleyee();
+        public empleyee infoEmpleyee = new empleyee();
         public string message = "";
         public void OnGet()
         {
@@ -28,17 +28,17 @@ namespace tareaBases2.Pages.Project.Employees
                         {
                             while (reader.Read())
                             {
-                                info.id = reader.GetInt32(0);
-                                info.idPuesto = reader.GetInt32(1);
-                                info.Identificacion = reader.GetInt32(2);
-                                info.Nombre = reader.GetString(3);
-                                info.FechaContratacion = reader.GetDateTime(4);
-                                info.SaldoVaciones = reader.GetInt16(5);
+                                infoEmpleyee.id = reader.GetInt32(0);
+                                infoEmpleyee.idPuesto = reader.GetInt32(1);
+                                infoEmpleyee.Identificacion = reader.GetInt32(2);
+                                infoEmpleyee.Nombre = reader.GetString(3);
+                                infoEmpleyee.FechaContratacion = reader.GetDateTime(4);
+                                infoEmpleyee.SaldoVaciones = reader.GetInt16(5);
                             }
                         }
                     }
 
-                    String idPuesto = info.idPuesto.ToString();
+                    String idPuesto = infoEmpleyee.idPuesto.ToString();
                     sqlRead = "SELECT * FROM Puestos WHERE id=@idPuesto";
 
                     using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))

@@ -42,9 +42,3 @@ public class jobConnection
         }
     }
 }
-public class jobs
-{
-    public Int32 id;
-    public string NombrePuesto;
-    public decimal SalarioxHora;
-}

@@ -14,7 +14,7 @@ namespace tareaBases2.Pages.Project.Employees
     {
         public connection conexion = new connection();
         public XML xmlLoad = new XML(); 
-        public List<infoEmpleyee> listaFiltrada = new List<infoEmpleyee>();
+        public List<empleyee> listaFiltrada = new List<empleyee>();
 
         public void OnGet()
         {
@@ -58,17 +58,17 @@ namespace tareaBases2.Pages.Project.Employees
                     {
                         while (reader.Read())
                         {
-                            infoEmpleyee info = new infoEmpleyee();
-                            info.id = reader.GetInt32(0);
-                            info.idPuesto = reader.GetInt32(1);
-                            info.Identificacion = reader.GetInt32(2);
-                            info.Nombre = reader.GetString(3);
-                            info.FechaContratacion = reader.GetDateTime(4);
-                            info.SaldoVaciones = reader.GetInt16(5);
-                            info.EsActivo = reader.GetBoolean(6);
+                            empleyee infoEmpleyee = new empleyee();
+                            infoEmpleyee.id = reader.GetInt32(0);
+                            infoEmpleyee.idPuesto = reader.GetInt32(1);
+                            infoEmpleyee.Identificacion = reader.GetInt32(2);
+                            infoEmpleyee.Nombre = reader.GetString(3);
+                            infoEmpleyee.FechaContratacion = reader.GetDateTime(4);
+                            infoEmpleyee.SaldoVaciones = reader.GetInt16(5);
+                            infoEmpleyee.EsActivo = reader.GetBoolean(6);
 
-                            listaFiltrada.Add(info);
-                            Console.Write(info);
+                            listaFiltrada.Add(infoEmpleyee);
+                            Console.Write(infoEmpleyee);
                         }
                     }
                 }

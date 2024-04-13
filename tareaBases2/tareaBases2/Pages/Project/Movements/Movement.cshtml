@@ -1,0 +1,76 @@
+﻿@page
+@model tareaBases2.Pages.Project.Movements.movementModel
+@{
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar empleado</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Detalles del empleado</h2>
+
+        <form method="POST">
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Identificación</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="identificacion" value="@Model.infoEmpleyee.Identificacion">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Nombre</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="nombre" value="@Model.infoEmpleyee.Nombre">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Saldo vacaciones</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="saldoVacaciones" value="@Model.infoEmpleyee.SaldoVaciones">
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Nombre de movimiento</th>
+                        <th>Monto movimiento</th>
+                        <th>Nuevo monto</th>
+                        <th>Usuaria</th>
+                        <th>IP</th>
+                        <th>Tiempo</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        @foreach (var item in Model.listaMovimientos)
+                        {
+                            <tr>
+                                <td>@item.Fecha</td>
+                                <td>@item.IdTipoMovimiento</td>
+                                <td>@item.Monto</td>
+                                <td>@item.NuevoSaldo</td>
+                                <td>@item.PostByUser</td>
+                                <td>@item.PostInIp</td>
+                                <td>@item.PostTime</td>
+                            </tr>
+                        }
+                    </tbody>
+            </table>
+            <div class="row mb-3">
+                <div class="col-sm-3 d-grid">
+                    <a class="btn btn-outline-primary" href="/Project/Employees/Index" role="button">Regresar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
