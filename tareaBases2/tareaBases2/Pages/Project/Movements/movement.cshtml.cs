@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 using System.Data.SqlClient;
+using System.Reflection.PortableExecutable;
 
 namespace tareaBases2.Pages.Project.Movements
 {
@@ -23,12 +25,20 @@ namespace tareaBases2.Pages.Project.Movements
                 {
                     sqlConnection.Open();
 
-                    String id = Request.Query["id"];
-                    string sqlRead = "SELECT * FROM Empleado WHERE id=@id";
+                    string id = Request.Query["id"]; // Obtener el ID del empleado desde la solicitud HTTP
 
-                    using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
+                    // Llamar al procedimiento almacenado detallesEmpleado
+                    using (SqlCommand command = new SqlCommand("listaMovimientos", sqlConnection))
                     {
-                        command.Parameters.AddWithValue("@id", id);
+                        command.CommandType = CommandType.StoredProcedure; // Especificar que el comando es un procedimiento almacenado
+                        command.Parameters.AddWithValue("@id", id); // Pasar el ID del empleado como parámetro
+
+                        // Parámetro de salida para el código de resultado
+                        SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                        outResultCodeParam.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outResultCodeParam);
+
+                        // Ejecutar el comando SQL y leer los resultados
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -41,17 +51,8 @@ namespace tareaBases2.Pages.Project.Movements
                                 infoEmpleyee.FechaContratacion = reader.GetDateTime(4);
                                 infoEmpleyee.SaldoVaciones = reader.GetInt16(5);
                             }
-                        }
-                    }
+                            reader.NextResult();
 
-                    String identificacion = infoEmpleyee.Identificacion.ToString();
-                    sqlRead = "SELECT * FROM Movimiento WHERE ValorDocId=@identificacion";
-
-                    using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
-                    {
-                        command.Parameters.AddWithValue("@identificacion", identificacion);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
                             while (reader.Read())
                             {
                                 movements infoMovements = new movements();
@@ -68,51 +69,31 @@ namespace tareaBases2.Pages.Project.Movements
                                 listaMovimientos.Add(infoMovements);
                                 Console.WriteLine(infoMovements);
                             }
-                        }
-                    }
-                    foreach(var info in listaMovimientos)
-                    {
-                        String idTipoMovimiento = info.IdTipoMovimiento.ToString();
-                        sqlRead = "SELECT * FROM TipoMovimiento WHERE id=@idTipoMovimiento";
+                            reader.NextResult();
 
-                        using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
-                        {
-                            command.Parameters.AddWithValue("@IdTipoMovimiento", idTipoMovimiento);
-                            using (SqlDataReader reader = command.ExecuteReader())
+                            while (reader.Read())
                             {
-                                while (reader.Read())
-                                {
-                                    tipoMovimiento infoTipoMovimiento = new tipoMovimiento();
+                                tipoMovimiento infoTipoMovimiento = new tipoMovimiento();
 
-                                    infoTipoMovimiento.id = reader.GetInt32(0);
-                                    infoTipoMovimiento.Nombre = reader.GetString(1);
-                                    infoTipoMovimiento.TipoAccion = reader.GetString(2);
+                                infoTipoMovimiento.id = reader.GetInt32(0);
+                                infoTipoMovimiento.Nombre = reader.GetString(1);
+                                infoTipoMovimiento.TipoAccion = reader.GetString(2);
 
-                                    listaTipoMovimiento.Add(infoTipoMovimiento);
-                                    Console.WriteLine(infoTipoMovimiento);
-                                }
+                                listaTipoMovimiento.Add(infoTipoMovimiento);
+                                Console.WriteLine(infoTipoMovimiento);
                             }
-                        }
+                            reader.NextResult();
 
-                        String postByUser = info.PostByUser.ToString();
-                        sqlRead = "SELECT * FROM Usuario WHERE id=@postByUser";
-
-                        using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
-                        {
-                            command.Parameters.AddWithValue("@postByUser", postByUser);
-                            using (SqlDataReader reader = command.ExecuteReader())
+                            while (reader.Read())
                             {
-                                while (reader.Read())
-                                {
-                                    usuario infoUsuario = new usuario();
+                                usuario infoUsuario = new usuario();
 
-                                    infoUsuario.id = reader.GetInt32(0);
-                                    infoUsuario.Username = reader.GetString(1);
-                                    infoUsuario.Password = reader.GetString(2);
+                                infoUsuario.id = reader.GetInt32(0);
+                                infoUsuario.Username = reader.GetString(1);
+                                infoUsuario.Password = reader.GetString(2);
 
-                                    listaUsuario.Add(infoUsuario);
-                                    Console.WriteLine(infoUsuario);
-                                }
+                                listaUsuario.Add(infoUsuario);
+                                Console.WriteLine(infoUsuario);
                             }
                         }
                     }

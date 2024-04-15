@@ -1,5 +1,6 @@
 ﻿@page
 @using System.Data.SqlClient
+@using System.Data;
 @{
     try
     {
@@ -10,19 +11,33 @@
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
             sqlConnection.Open();
-            string sqlInfo = "UPDATE Empleado SET EsActivo=0" +
-                            "WHERE id=@id;";
-            using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
+            // Crear un comando SQL para llamar al procedimiento almacenado
+            using (SqlCommand command = new SqlCommand("eliminarEmpleado", sqlConnection))
             {
+                // Especificar que el comando es un procedimiento almacenado
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Parámetros de entrada
                 command.Parameters.AddWithValue("@id", id);
 
+                // Parámetro de salida para el código de resultado
+                SqlParameter outParam = command.Parameters.Add("@OutResulTCode", SqlDbType.Int);
+                outParam.Direction = ParameterDirection.Output;
+
+                // Ejecutar el procedimiento almacenado
                 command.ExecuteNonQuery();
+
+                // Obtener el valor del parámetro de salida (código de resultado)
+                int resultCode = Convert.ToInt32(outParam.Value);
+                Console.WriteLine("Código de resultado: " + resultCode);
             }
+            sqlConnection.Close();
         }
     }
     catch(Exception ex)
     {
 
     }
+    
     Response.Redirect("/Project/Employees/Index");
 }

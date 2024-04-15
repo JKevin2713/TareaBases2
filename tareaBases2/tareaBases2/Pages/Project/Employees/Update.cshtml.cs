@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using static XML;
@@ -25,11 +26,23 @@ namespace tareaBases2.Pages.Project.Employees
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    string sqlRead = "SELECT * FROM Empleado WHERE id=@id";
-
-                    using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
+                    using (SqlCommand command = new SqlCommand("modificarEmpleado", sqlConnection)) // Llamar al procedimiento almacenado
                     {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Agregar parámetro de salida
+                        SqlParameter outParameter = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                        outParameter.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outParameter);
+
+                        // Agregar parámetro de entrada
                         command.Parameters.AddWithValue("@id", id);
+                        command.Parameters.AddWithValue("@bandera", 0); // Bandera para indicar que se va a modificar el empleado
+                        command.Parameters.AddWithValue("@idPuesto", 0);
+                        command.Parameters.AddWithValue("@identificacion", 0);
+                        command.Parameters.AddWithValue("@nombre", "");
+
+                        // Ejecutar el comando y procesar los resultados
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -53,13 +66,13 @@ namespace tareaBases2.Pages.Project.Employees
         public void OnPost()
         {
             String id = Request.Query["id"];
-            string puesto = Request.Form["puesto"];
+            string auxPuesto = Request.Form["puesto"];
             string auxIdentificacion = Request.Form["identificacion"];
             string auxNombre = Request.Form["nombre"];
             int resultCode = 0;
 
             // Validar los datos ingresados
-            if (ValidarNomSal(auxIdentificacion, auxNombre) == false)
+            if (ValidarNomSal(auxIdentificacion, auxNombre, auxPuesto) == false)
             {
                 message = "Error en los datos, revise los datos ingresados";
                 return;
@@ -67,7 +80,7 @@ namespace tareaBases2.Pages.Project.Employees
             // Asignar los valores validados al objeto infoEmpleyee
             infoEmpleyee.Identificacion = int.Parse(auxIdentificacion);
             infoEmpleyee.Nombre = auxNombre;
-            infoEmpleyee.idPuesto = int.Parse(puesto);
+            infoEmpleyee.idPuesto = int.Parse(auxPuesto);
 
             try
             {
@@ -76,15 +89,24 @@ namespace tareaBases2.Pages.Project.Employees
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    string sqlInfo = "UPDATE Empleado " +
-                                    "SET idPuesto=@idPuesto, ValorDocumentoIdentidad=@identificacion, Nombre=@nombre " +
-                                    "WHERE id=@id;";
+                    string sqlInfo = "modificarEmpleado"; // Nombre del procedimiento almacenado
+
                     using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros de entrada
                         command.Parameters.AddWithValue("@id", id);
+                        command.Parameters.AddWithValue("@bandera", 1); // Bandera para indicar que se va a modificar el empleado
                         command.Parameters.AddWithValue("@idPuesto", infoEmpleyee.idPuesto);
                         command.Parameters.AddWithValue("@identificacion", infoEmpleyee.Identificacion);
                         command.Parameters.AddWithValue("@nombre", infoEmpleyee.Nombre);
+
+                        // Parámetro de salida para el código de resultado
+                        SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                        outResultCodeParam.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outResultCodeParam);
+
                         command.ExecuteNonQuery();
                     }
                 }
@@ -107,10 +129,10 @@ namespace tareaBases2.Pages.Project.Employees
                 message = "Se a creado correctamente el empleado";
             }
         }
-        public bool ValidarNomSal(string identificacion, string nombre)
+        public bool ValidarNomSal(string identificacion, string nombre, string auxPuesto)
         {
             // Verificar que ambos campos no estén vacíos
-            if (nombre.Length != 0 || identificacion.Length != 0)
+            if ((nombre.Length != 0 || identificacion.Length != 0) && auxPuesto != "")
             {
                 // Utilizar expresiones regulares para verificar el formato del nombre y salario
                 if (Regex.IsMatch(nombre, @"^[a-zA-Z\s]+$") && Regex.IsMatch(identificacion, @"^[0-9]+$"))

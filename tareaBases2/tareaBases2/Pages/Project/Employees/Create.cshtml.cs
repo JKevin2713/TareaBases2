@@ -30,19 +30,19 @@ namespace tareaBases2.Pages.Project.Employees
         {
             string auxIdentificacion = Request.Form["identificacion"];
             string auxNombre = Request.Form["nombre"];
-            string puesto = Request.Form["puesto"];
+            string auxPuesto = Request.Form["puesto"];
             DateTime fechaContratacion = DateTime.Now;
 
             int resultCode = 0;
 
             // Validar los datos ingresados
-            if (ValidarNomSal(auxIdentificacion, auxNombre) == false)
+            if (ValidarNomSal(auxIdentificacion, auxNombre, auxPuesto) == false)
             {
                 message = "Error en los datos, revise los datos ingresados";
                 return;
             }
             // Asignar los valores validados al objeto infoEmpleyee
-            infoEmpleyee.idPuesto = int.Parse(puesto);
+            infoEmpleyee.idPuesto = int.Parse(auxPuesto);
             infoEmpleyee.Identificacion = int.Parse(auxIdentificacion);
             infoEmpleyee.Nombre = auxNombre;
             infoEmpleyee.FechaContratacion = fechaContratacion;
@@ -62,25 +62,19 @@ namespace tareaBases2.Pages.Project.Employees
                     // Especificar que el comando es un procedimiento almacenado
                     sqlConnection.Open(); // Abrir la conexión
 
-                    string sqlInfo = "INSERT INTO Empleado" +
-                                     "(IdPuesto, ValorDocumentoIdentidad, Nombre, FechaContratacion, SaldoVacaciones, EsActivo) VALUES" +
-                                     "(@idPuesto, @identificacion, @nombre, @fechaContratacion, @SaldoVaciones, @EsActivo );";
+                    // Crear un comando SQL para llamar al stored procedure "registroEmpleado"
+                    using (SqlCommand command = new SqlCommand("registroEmpleado", sqlConnection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
 
-                    // Crear un comando SQL para llamar al procedimiento almacenado "----"
-                    using (SqlCommand command = new SqlCommand(sqlInfo, sqlConnection))
-                    {;
-                        //command.CommandType = CommandType.StoredProcedure;
-
-                        // Parámetros de entrada
+                        // Parámetros de entraada
                         command.Parameters.AddWithValue("@idPuesto", infoEmpleyee.idPuesto);
                         command.Parameters.AddWithValue("@identificacion", infoEmpleyee.Identificacion);
                         command.Parameters.AddWithValue("@nombre", infoEmpleyee.Nombre);
                         command.Parameters.AddWithValue("@fechaContratacion", infoEmpleyee.FechaContratacion);
-                        command.Parameters.AddWithValue("@SaldoVaciones", infoEmpleyee.SaldoVaciones);
+                        command.Parameters.AddWithValue("@SaldoVacaciones", infoEmpleyee.SaldoVaciones);
                         command.Parameters.AddWithValue("@EsActivo", infoEmpleyee.EsActivo);
-                        command.ExecuteNonQuery();
-                        //Aca a bajo es para cuando esta en el SP
-                        /*
+
                         // Parámetro de salida
                         command.Parameters.Add("@OutResulTCode", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.ExecuteNonQuery();
@@ -88,7 +82,7 @@ namespace tareaBases2.Pages.Project.Employees
                         // Obtener el valor del parámetro de salida
                         resultCode = Convert.ToInt32(command.Parameters["@OutResulTCode"].Value);
                         Console.WriteLine("Código de resultado: " + resultCode);
-                        */
+                        
                     }
                     // Cerrar la conexión después de haber terminado de trabajar con ella
                     sqlConnection.Close();
@@ -104,20 +98,26 @@ namespace tareaBases2.Pages.Project.Employees
             // Evaluar el resultado del procedimiento almacenado
             if (resultCode == 50006)
             {
-                message = "Error, el empleado que desea agregar ya existe";
+                message = "Error, el nombre del empleado que desea agregar ya existe";
+            }
+            else if (resultCode == 50007)
+            {
+                message = "Error, la cedula del empleado que desea agregar ya existe";
             }
             else
             {
                 flag = true;
                 message = "Se a creado correctamente el empleado";
             }
+
+            OnGet();
         }
 
         // Método para validar el nombre y salario ingresados
-        public bool ValidarNomSal(string identificacion, string nombre)
+        public bool ValidarNomSal(string identificacion, string nombre, string puesto)
         {
             // Verificar que ambos campos no estén vacíos
-            if (nombre.Length != 0 || identificacion.Length != 0)
+            if ((nombre.Length != 0 || identificacion.Length != 0) && puesto != "")
             {
                 // Utilizar expresiones regulares para verificar el formato del nombre y salario
                 if (Regex.IsMatch(nombre, @"^[a-zA-Z\s]+$") && Regex.IsMatch(identificacion, @"^[0-9]+$"))
