@@ -9,26 +9,101 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="/project/styles/stylelogin" rel="stylesheet" />
+    <style>
+        /* Estilos adicionales para centrar verticalmente */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #timer {
+            font-size: 16px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container login-container">
-        <div class="row">
+    <div class="container">
+        <div class="row justify-content-center">
             <div class="col-md-6 login-form-1">
-                <h3>Login</h3>
-                <form>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="User" value="" />
+                <h3 class="text-center">Inicia de sesion</h3>
+
+                @if (Model.bandera == false)
+                {
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>@Model.message</strong>
                     </div>
+                }
+
+                <form method="post">
+
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password" value="" />
+                        <input type="text" class="form-control" placeholder="Usuario" name="username" value="@Model.infoUsuario.Username" />
                     </div>
-                    <div class="col-sm-3 d-grid">
-                        <a class="btn btn-outline-primary" href="/Project/Employees/Index" role="button">Cancel</a>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Contraseña" name="password" value="@Model.infoUsuario.Password" />
+                    </div>
+
+                    @if (@Model.bandera == true)
+                    {
+                        <div class="form-group text-center">
+                            <script>
+                                // Redirigir inmediatamente al cargar la página
+                                window.location.href = "/Project/Employees/Index";
+                            </script>
+                        </div>
+                    }
+
+                    <div class="row mb-3">
+                        <div class="offset-sm-3 col-sm-3 d-grid">
+                            <button type="submit" class="btn btn-primary">Iniciar sesion</button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <div id="timer" class="text-center">Tiempo restante: </div>
+
+    <script>
+        // Establece un temporizador para cerrar la página después de 30 minutos (en milisegundos)
+        var tiempoRestante = 30 * 60; // 30 minutos en segundos
+        var timerElement = document.getElementById('timer');
+
+        function actualizarReloj() {
+            var minutos = Math.floor(tiempoRestante / 60);
+            var segundos = tiempoRestante % 60;
+
+            // Agrega un cero delante si el número es menor que 10
+            minutos = minutos < 10 ? '0' + minutos : minutos;
+            segundos = segundos < 10 ? '0' + segundos : segundos;
+
+            timerElement.textContent = 'Tiempo restante: ' + minutos + ':' + segundos;
+
+            if (tiempoRestante <= 0) {
+                clearInterval(intervalo);
+                window.close();
+            } else {
+                tiempoRestante--;
+            }
+        }
+
+        // Actualiza el reloj cada segundo
+        var intervalo = setInterval(actualizarReloj, 1000);
+    </script>
 </body>
 </html>
+
+
+
+
+

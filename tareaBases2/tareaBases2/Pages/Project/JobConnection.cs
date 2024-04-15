@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace tareaBases2.Pages.Project;
@@ -16,10 +17,18 @@ public class jobConnection
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
             {
                 sqlConnection.Open();
-                string sqlReadPuesto = "SELECT * FROM Puestos";
-
-                using (SqlCommand command = new SqlCommand(sqlReadPuesto, sqlConnection))
+                string sqlReadPuestoSP = "tablaPuestos";
+                using (SqlCommand command = new SqlCommand(sqlReadPuestoSP, sqlConnection))
                 {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetro de salida
+                    SqlParameter outParameter = new SqlParameter();
+                    outParameter.ParameterName = "@OutResulTCode";
+                    outParameter.SqlDbType = SqlDbType.Int;
+                    outParameter.Direction = ParameterDirection.Output;
+                    command.Parameters.Add(outParameter);
+
                     using (SqlDataReader readerPuesto = command.ExecuteReader())
                     {
                         while (readerPuesto.Read())
@@ -33,7 +42,17 @@ public class jobConnection
                             Console.Write(infoJobs.SalarioxHora);
                         }
                     }
+
+                    // Obtener el valor del parámetro de salida después de ejecutar el procedimiento almacenado
+                    int resultCode = Convert.ToInt32(outParameter.Value);
+                    // Manejar el resultado, si es necesario
+                    if (resultCode != 0)
+                    {
+                        // Aquí puedes manejar el código de resultado de salida, si es diferente de cero
+                        Console.WriteLine("Resultado del procedimiento almacenado: " + resultCode);
+                    }
                 }
+
             }
         }
         catch (Exception ex)

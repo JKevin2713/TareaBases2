@@ -75,6 +75,7 @@ namespace tareaBases2.Pages.Project.Employees
             if (ValidarNomSal(auxIdentificacion, auxNombre, auxPuesto) == false)
             {
                 message = "Error en los datos, revise los datos ingresados";
+                OnGet();
                 return;
             }
             // Asignar los valores validados al objeto infoEmpleyee
@@ -121,13 +122,18 @@ namespace tareaBases2.Pages.Project.Employees
             // Evaluar el resultado del procedimiento almacenado
             if (resultCode == 50006)
             {
-                message = "Error, el empleado que desea agregar ya existe";
+                message = "Error, el nombre del empleado que desea agregar ya existe";
+            }
+            else if (resultCode == 50007)
+            {
+                message = "Error, la cedula del empleado que desea agregar ya existe";
             }
             else
             {
                 flag = true;
                 message = "Se a creado correctamente el empleado";
             }
+            OnGet();
         }
         public bool ValidarNomSal(string identificacion, string nombre, string auxPuesto)
         {

@@ -39,6 +39,7 @@ namespace tareaBases2.Pages.Project.Employees
             if (ValidarNomSal(auxIdentificacion, auxNombre, auxPuesto) == false)
             {
                 message = "Error en los datos, revise los datos ingresados";
+                OnGet();
                 return;
             }
             // Asignar los valores validados al objeto infoEmpleyee
@@ -109,7 +110,6 @@ namespace tareaBases2.Pages.Project.Employees
                 flag = true;
                 message = "Se a creado correctamente el empleado";
             }
-
             OnGet();
         }
 
