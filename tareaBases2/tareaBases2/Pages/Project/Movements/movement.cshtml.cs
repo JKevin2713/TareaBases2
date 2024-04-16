@@ -32,6 +32,7 @@ namespace tareaBases2.Pages.Project.Movements
                     {
                         command.CommandType = CommandType.StoredProcedure; // Especificar que el comando es un procedimiento almacenado
                         command.Parameters.AddWithValue("@id", id); // Pasar el ID del empleado como parámetro
+                        command.Parameters.AddWithValue("@bandera", 0);
 
                         // Parámetro de salida para el código de resultado
                         SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 using static XML;
 using System.Data.SqlClient;
 
@@ -22,16 +23,27 @@ namespace tareaBases2.Pages.Project.Movements
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    String id = Request.Query["id"];
-                    string sqlRead = "SELECT * FROM Empleado WHERE id=@id";
 
-                    using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
+                    string id = Request.Query["id"]; // Obtener el ID del empleado desde la solicitud HTTP
+
+                    // Llamar al procedimiento almacenado detallesEmpleado
+                    using (SqlCommand command = new SqlCommand("listaMovimientos", sqlConnection))
                     {
-                        command.Parameters.AddWithValue("@id", id);
+                        command.CommandType = CommandType.StoredProcedure; // Especificar que el comando es un procedimiento almacenado
+                        command.Parameters.AddWithValue("@id", id); // Pasar el ID del empleado como parámetro
+                        command.Parameters.AddWithValue("@bandera", 1);
+
+                        // Parámetro de salida para el código de resultado
+                        SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                        outResultCodeParam.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outResultCodeParam);
+
+                        // Ejecutar el comando SQL y leer los resultados
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
+
                                 infoEmpleyee.id = reader.GetInt32(0);
                                 infoEmpleyee.idPuesto = reader.GetInt32(1);
                                 infoEmpleyee.Identificacion = reader.GetInt32(2);
@@ -39,15 +51,9 @@ namespace tareaBases2.Pages.Project.Movements
                                 infoEmpleyee.FechaContratacion = reader.GetDateTime(4);
                                 infoEmpleyee.SaldoVaciones = reader.GetInt16(5);
                             }
-                        }
-                    }
 
-                    sqlRead = "SELECT * FROM TipoMovimiento";
+                            reader.NextResult();
 
-                    using (SqlCommand command = new SqlCommand(sqlRead, sqlConnection))
-                    {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
                             while (reader.Read())
                             {
                                 tipoMovimiento infoTipoMovimiento = new tipoMovimiento();
@@ -60,7 +66,6 @@ namespace tareaBases2.Pages.Project.Movements
                                 Console.WriteLine(infoTipoMovimiento);
                             }
                         }
-
                     }
                     sqlConnection.Close();
                 }
