@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("tareaBases2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60729f6b1760c511fba4d5a759733354386c0b8d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37d604300a18eaf32d5052a736e0559867f5e029")]
 [assembly: System.Reflection.AssemblyProductAttribute("tareaBases2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("tareaBases2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

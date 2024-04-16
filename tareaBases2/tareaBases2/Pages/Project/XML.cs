@@ -274,7 +274,7 @@ public class XML
         XmlDocument doc = new XmlDocument();
         doc.Load("Pages/Project/datos.xml");
 
-        bool Estado = ObtenerEstado(connectionString); }
+        bool Estado = ObtenerEstado(connectionString); 
         if (Estado == false)
         {
             foreach (XmlNode node in doc.DocumentElement.ChildNodes)
@@ -397,7 +397,6 @@ public class XML
                         {
                             if(AuxPostByUser == listaUsuarios[i].Nombre)
                             {
-                                Console.WriteLine(i);
                                 PostByUser = i + 1;
                             }
 
