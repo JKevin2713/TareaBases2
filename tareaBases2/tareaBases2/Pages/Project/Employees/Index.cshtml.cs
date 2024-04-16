@@ -15,8 +15,6 @@ namespace tareaBases2.Pages.Project.Employees
     {
         // Instancia de la clase para establecer la conexión a la base de datos
         public connection conexion = new connection();
-        // Instancia de la clase para cargar XML
-        public XML xmlLoad = new XML();
         // Lista de objetos 'movements'
         public List<movements> listaMovimientos = new List<movements>();
         // Lista de objetos 'empleyee' filtrados

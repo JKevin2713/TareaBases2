@@ -8,18 +8,22 @@ namespace tareaBases2.Pages.Project.Account
 {
     public class LoginModel : PageModel
     {
+        // Instancia de la clase para cargar XML
+        public XML xmlLoad = new XML();
 
         public usuario infoUsuario = new usuario();
         public bool bandera = false;
         public string message = "";
+
         public void OnGet()
         {
+            xmlLoad.Cargar();
         }
         public void OnPost() 
         {
             string auxUsername = Request.Form["username"];
             string auxPassword = Request.Form["password"];
-            int resultCode = 0;  
+            int resultCode = 0;
 
             if(auxUsername == "" || auxPassword == "")
             {

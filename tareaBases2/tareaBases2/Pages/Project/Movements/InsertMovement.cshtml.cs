@@ -75,5 +75,10 @@ namespace tareaBases2.Pages.Project.Movements
                 message = ex.Message;
             }
         }
+
+        public void OnPost()
+        {
+
+        }
     }
 }
