@@ -2,50 +2,99 @@
 @using System.Data.SqlClient
 @using System.Data;
 @{
+    empleyee infoEmpleyee = new empleyee();
+    insertarBitacora insertar = new insertarBitacora();
+    String id = Request.Query["id"];
+    String idUser = Request.Query["idUser"];
+    String bandera = Request.Query["bandera"];
     try
     {
-        String id = Request.Query["id"];
-        String idUser = Request.Query["idUser"];
-
         string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2" +
                                     ";Integrated Security=True;Encrypt=False";
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
             sqlConnection.Open();
-            // Crear un comando SQL para llamar al procedimiento almacenado
-            using (SqlCommand command = new SqlCommand("eliminarEmpleado", sqlConnection))
+
+            using (SqlCommand command = new SqlCommand("eliminarEmpleado", sqlConnection)) // Llamar al procedimiento almacenado
             {
-                // Especificar que el comando es un procedimiento almacenado
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Parámetros de entrada
+                // Agregar parámetro de salida
+                SqlParameter outParameter = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                outParameter.Direction = ParameterDirection.Output;
+                command.Parameters.Add(outParameter);
+
+                // Agregar parámetro de entrada
                 command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@bandera", 0);
 
-                // Parámetro de salida para el código de resultado
-                SqlParameter outParam = command.Parameters.Add("@OutResulTCode", SqlDbType.Int);
-                outParam.Direction = ParameterDirection.Output;
-
-                // Ejecutar el procedimiento almacenado
-                command.ExecuteNonQuery();
-
-                // Obtener el valor del parámetro de salida (código de resultado)
-                int resultCode = Convert.ToInt32(outParam.Value);
-                Console.WriteLine("Código de resultado: " + resultCode);
+                // Ejecutar el comando y procesar los resultados
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        infoEmpleyee.id = reader.GetInt32(0);
+                        infoEmpleyee.idPuesto = reader.GetInt32(1);
+                        infoEmpleyee.Identificacion = reader.GetInt32(2);
+                        infoEmpleyee.Nombre = reader.GetString(3);
+                        infoEmpleyee.FechaContratacion = reader.GetDateTime(4);
+                        infoEmpleyee.SaldoVaciones = reader.GetInt16(5);
+                    }
+                }
             }
-            /*
-            string tipoEvento = "Login No Exitoso";
-            string message = "Empleado con ValorDocumentoIdentidad ya existe en inserción." +
-                "Cedula = " + infoEmpleyee.Identificacion +
-                " Nombre = " + infoEmpleyee.Nombre +
-                " Puesto = " + infoEmpleyee.idPuesto;
-                */
+
+            string tipoEvento = "";
+            string message = "";
+
+            if(bandera == "1")
+            {
+                // Crear un comando SQL para llamar al procedimiento almacenado
+                using (SqlCommand command = new SqlCommand("eliminarEmpleado", sqlConnection))
+                {
+                    // Especificar que el comando es un procedimiento almacenado
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetros de entrada
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@bandera", 1);
+
+                    // Parámetro de salida para el código de resultado
+                    SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                    outResultCodeParam.Direction = ParameterDirection.Output;
+                    command.Parameters.Add(outResultCodeParam);
+
+                    // Ejecutar el procedimiento almacenado
+                    command.ExecuteNonQuery();
+                }
+
+                tipoEvento = "Borrado exitoso";
+                message = "Borrado exitoso." +
+                    "Cedula = " + infoEmpleyee.Identificacion +
+                    " Nombre = " + infoEmpleyee.Nombre +
+                    " Puesto = " + infoEmpleyee.idPuesto +
+                    " Saldo Vacaciones = " + infoEmpleyee.SaldoVaciones;
+
+            }
+            else
+            {
+                tipoEvento = "Intento de borrado";
+                message = "Intento de borrado." +
+                    "Cedula = " + infoEmpleyee.Identificacion +
+                    " Nombre = " + infoEmpleyee.Nombre +
+                    " Puesto = " + infoEmpleyee.idPuesto +
+                    " Saldo Vacaciones = " + infoEmpleyee.SaldoVaciones;
+            }
+
+
+            insertar.insertarBitacoraEventos(sqlConnection, message, tipoEvento, idUser);
+
             sqlConnection.Close();
         }
     }
     catch(Exception ex)
     {
-
+        Console.WriteLine("No paso");
     }
     
-    Response.Redirect("/Project/Employees/Index?idUser=@Model.idUser");
+    Response.Redirect("/Project/Employees/Index?idUser=" + idUser);
 }

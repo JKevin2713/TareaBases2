@@ -13,10 +13,13 @@
 
     <title>Desactivar Empleado</title>
     <script>
-        function confirmarDesactivacion(item) {
+        function confirmarDesactivacion(id, idUser) {
             if (confirm("¿Estás seguro de que deseas desactivar este empleado?")) {
                 // Si el usuario confirma, enviar el formulario
-                window.location.href = '/Project/Employees/Delete?id=' + item;
+                window.location.href = '/Project/Employees/Delete?id=' + id + '&idUser=' + idUser + "&bandera=1";
+            }
+            else{
+                window.location.href = '/Project/Employees/Delete?id=' + id + '&idUser=' + idUser + "&bandera=0";
             }
         }
     </script>
@@ -58,7 +61,7 @@
                                 <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id&idUser=@Model.idUser'>Modificar</a>
                                 <a class='btn btn-success btn-sm' href='/Project/Movements/Movement?id=@item.id&idUser=@Model.idUser'>Movimientos</a>
                                 <a class='btn btn-success btn-sm' href='/Project/Movements/InsertMovement?id=@item.id&idUser=@Model.idUser'>Insertar Movimiento</a>
-                                <a class='btn btn-danger btn-sm'  onclick='confirmarDesactivacion(@item.id)'>Eliminar</a>
+                                <a class='btn btn-danger btn-sm' onclick='confirmarDesactivacion(@item.id, @Model.idUser)'>Eliminar</a>
                         </td>
                     </tr>
                 }
@@ -81,7 +84,7 @@
                                 <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id&idUser=@Model.idUser'>Modificar</a>
                                 <a class='btn btn-success btn-sm' href='/Project/Movements/Movement?id=@item.id&idUser=@Model.idUser'>Movimientos</a>
                                 <a class='btn btn-success btn-sm' href='/Project/Movements/InsertMovement?id=@item.id&idUser=@Model.idUser'>Insertar Movimiento</a>
-                                <a class='btn btn-danger btn-sm' onclick='confirmarDesactivacion(@item.id)'>Eliminar</a>
+                                <a class='btn btn-danger btn-sm' onclick='confirmarDesactivacion(@item.id, @Model.idUser)'>Eliminar</a>
                             </td>
                         </tr>
                     }

@@ -14,6 +14,7 @@ namespace tareaBases2.Pages.Project.Account
         public int id;
         public bool bandera = false;
         public string message = "";
+        public insertarBitacora insertar = new insertarBitacora();
 
         public void OnGet()
         {
@@ -72,6 +73,29 @@ namespace tareaBases2.Pages.Project.Account
                         Console.WriteLine("Código de resultado: " + resultCode);
 
                     }
+
+                    string tipoEvento = "";
+                    string mensaje = "";
+                    // Evaluar el resultado del procedimiento almacenado
+                    if (resultCode == 50006)
+                    {
+                        tipoEvento = "Login No Exitoso";
+                        mensaje = "Error, la contraseña ingresado no incide";
+                    }
+                    else if (resultCode == 50007)
+                    {
+                        tipoEvento = "Login No Exitoso";
+                        mensaje = "Error, usuario no existe";
+
+                    }
+                    else if (resultCode == 1)
+                    {
+                        bandera = true;
+                        tipoEvento = "Login Exitoso";
+                        mensaje = "Inicia de sesion exitosa";
+                    }
+
+                    insertar.insertarBitacoraEventos(sqlConnection, mensaje, tipoEvento, "1");
                     // Cerrar la conexión después de haber terminado de trabajar con ella
                     sqlConnection.Close();
                 }
@@ -83,20 +107,8 @@ namespace tareaBases2.Pages.Project.Account
                 return;
             }
 
-            // Evaluar el resultado del procedimiento almacenado
-            if (resultCode == 50006)
-            {
-                message = "Error, la contraseña ingresado no incide";
-            }
-            else if (resultCode == 50007)
-            {
-                message = "Error, usuario no existe";
-            }
-            else if (resultCode == 1)
-            {
-                bandera = true;
-                message = "Inicia de sesion exitosa";
-            }
+            Console.WriteLine();
         }
     }
 }
+
