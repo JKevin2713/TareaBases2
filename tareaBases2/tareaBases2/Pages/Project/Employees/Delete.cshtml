@@ -5,6 +5,7 @@
     try
     {
         String id = Request.Query["id"];
+        String idUser = Request.Query["idUser"];
 
         string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2" +
                                     ";Integrated Security=True;Encrypt=False";
@@ -31,6 +32,13 @@
                 int resultCode = Convert.ToInt32(outParam.Value);
                 Console.WriteLine("Código de resultado: " + resultCode);
             }
+            /*
+            string tipoEvento = "Login No Exitoso";
+            string message = "Empleado con ValorDocumentoIdentidad ya existe en inserción." +
+                "Cedula = " + infoEmpleyee.Identificacion +
+                " Nombre = " + infoEmpleyee.Nombre +
+                " Puesto = " + infoEmpleyee.idPuesto;
+                */
             sqlConnection.Close();
         }
     }
@@ -39,5 +47,5 @@
 
     }
     
-    Response.Redirect("/Project/Employees/Index");
+    Response.Redirect("/Project/Employees/Index?idUser=@Model.idUser");
 }

@@ -9,15 +9,21 @@ namespace tareaBases2.Pages.Project.Employees
 {
     public class UpdateModel : PageModel
     {
+        public string idUser = "";
         public jobConnection jobs = new jobConnection();
         public empleyee infoEmpleyee = new empleyee();
+        public insertarBitacora insertar = new insertarBitacora();
         public string message = "";
         public bool flag = false;
 
+
+        public int identidadAntesEditar = 0;
+        public string nombreAntesEditar = "";
+        public int puestoAntesEditar = 0;
         public void OnGet()
         {
             String id = Request.Query["id"];
-
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             try
             {
                 jobs.conexion();
@@ -55,7 +61,11 @@ namespace tareaBases2.Pages.Project.Employees
                                 infoEmpleyee.SaldoVaciones = reader.GetInt16(5);
                             }
                         }
+                        identidadAntesEditar = infoEmpleyee.Identificacion;
+                        nombreAntesEditar = infoEmpleyee.Nombre;
+                        puestoAntesEditar = infoEmpleyee.idPuesto;
                     }
+                    sqlConnection.Close();
                 }
             }
             catch (Exception ex)
@@ -65,6 +75,7 @@ namespace tareaBases2.Pages.Project.Employees
         }
         public void OnPost()
         {
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             String id = Request.Query["id"];
             string auxPuesto = Request.Form["puesto"];
             string auxIdentificacion = Request.Form["identificacion"];
@@ -110,6 +121,47 @@ namespace tareaBases2.Pages.Project.Employees
 
                         command.ExecuteNonQuery();
                     }
+
+                    string tipoEvento = "";
+                    // Evaluar el resultado del procedimiento almacenado
+                    if (resultCode == 50006)
+                    {
+                        tipoEvento = "Update no exitoso";
+                        message = "Empleado con ValorDocumentoIdentidad ya existe en actualizacion" +
+                            " Cedula anterior = " + identidadAntesEditar +
+                            " Nombre anterior = " + nombreAntesEditar +
+                            " Puesto anterior = " + puestoAntesEditar +
+                            " Cedula = " + infoEmpleyee.Identificacion +
+                            " Nombre = " + infoEmpleyee.Nombre +
+                            " Puesto = " + infoEmpleyee.idPuesto;
+                    }
+                    else if (resultCode == 50007)
+                    {
+                        tipoEvento = "Update no exitoso";
+                        message = "Empleado con mismo nombre ya existe en actualización" +
+                            " Cedula anterior = " + identidadAntesEditar +
+                            " Nombre anterior = " + nombreAntesEditar +
+                            " Puesto anterior = " + puestoAntesEditar +
+                            " Cedula = " + infoEmpleyee.Identificacion +
+                            " Nombre = " + infoEmpleyee.Nombre +
+                            " Puesto = " + infoEmpleyee.idPuesto;
+                    }
+                    else
+                    {
+                        flag = true;
+                        tipoEvento  = "Update exitoso";
+                        message = "Se a creado correctamente el empleado" +
+                            " Cedula anterior = " + identidadAntesEditar +
+                            " Nombre anterior = " + nombreAntesEditar +
+                            " Puesto anterior = " + puestoAntesEditar +
+                            " Cedula = " + infoEmpleyee.Identificacion +
+                            " Nombre = " + infoEmpleyee.Nombre +
+                            " Puesto = " + infoEmpleyee.idPuesto;
+                    }
+
+                    insertar.insertarBitacoraEventos(sqlConnection, message, tipoEvento, idUser);
+
+                    sqlConnection.Close();
                 }
             }
 
@@ -119,20 +171,7 @@ namespace tareaBases2.Pages.Project.Employees
                 message = ex.Message;
                 return;
             }
-            // Evaluar el resultado del procedimiento almacenado
-            if (resultCode == 50006)
-            {
-                message = "Error, el nombre del empleado que desea agregar ya existe";
-            }
-            else if (resultCode == 50007)
-            {
-                message = "Error, la cedula del empleado que desea agregar ya existe";
-            }
-            else
-            {
-                flag = true;
-                message = "Se a creado correctamente el empleado";
-            }
+
             OnGet();
         }
         public bool ValidarNomSal(string identificacion, string nombre, string auxPuesto)

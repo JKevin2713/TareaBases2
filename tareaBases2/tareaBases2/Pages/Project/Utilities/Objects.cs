@@ -42,3 +42,19 @@ public class usuario
     public string Username;
     public string Password;
 }
+
+public class tipoEvento
+{
+    public Int32 id;
+    public string Nombre;
+}
+
+public class bitacoraEvento
+{
+    public Int32 id;
+    public string idTipoEvento;
+    public string descripcion;
+    public Int32 PostByUser;
+    public string PostInIp;
+    public DateTime PostTime;
+}

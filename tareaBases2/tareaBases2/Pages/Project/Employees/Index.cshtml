@@ -24,7 +24,7 @@
 <body>
     <div class="container">
         <h2>Tabla de empleados</h2>
-        <a class='btn btn-primary btn-sm mb-3' href='/Project/Employees/Create'> Nuevo empleado </a>
+        <a class='btn btn-primary btn-sm mb-3' href='/Project/Employees/Create?idUser=@Model.idUser'> Nuevo empleado </a>
         <form method="post">
             <input type="text" name="buscar" id="buscarInput" />
             <button type="submit">Filtrar</button>
@@ -54,11 +54,11 @@
                         <td>@item.SaldoVaciones</td>
                         <td>@item.EsActivo</td>
                         <td>
-                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Detalles</a>
-                            <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Modificar</a>
-                            <a class='btn btn-success btn-sm' href='/Project/Movements/Movement?id=@item.id'>Movimientos</a>
-                            <a class='btn btn-success btn-sm' href='/Project/Movements/InsertMovement?id=@item.id'>Insertar Movimiento</a>
-                            <a class='btn btn-danger btn-sm'  onclick='confirmarDesactivacion(@item.id)'>Eliminar</a>
+                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id&idUser=@Model.idUser'>Detalles</a>
+                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id&idUser=@Model.idUser'>Modificar</a>
+                                <a class='btn btn-success btn-sm' href='/Project/Movements/Movement?id=@item.id&idUser=@Model.idUser'>Movimientos</a>
+                                <a class='btn btn-success btn-sm' href='/Project/Movements/InsertMovement?id=@item.id&idUser=@Model.idUser'>Insertar Movimiento</a>
+                                <a class='btn btn-danger btn-sm'  onclick='confirmarDesactivacion(@item.id)'>Eliminar</a>
                         </td>
                     </tr>
                 }
@@ -77,9 +77,11 @@
                             <td>@item.SaldoVaciones</td>
                             <td>@item.EsActivo</td>
                             <td>
-                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id'>Details</a>
-                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id'>Update</a>
-                                <a class='btn btn-danger btn-sm' onclick='confirmarDesactivacion(@item)'>Delete</a>
+                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Details?id=@item.id&idUser=@Model.idUser'>Detalles</a>
+                                <a class='btn btn-primary btn-sm' href='/Project/Employees/Update?id=@item.id&idUser=@Model.idUser'>Modificar</a>
+                                <a class='btn btn-success btn-sm' href='/Project/Movements/Movement?id=@item.id&idUser=@Model.idUser'>Movimientos</a>
+                                <a class='btn btn-success btn-sm' href='/Project/Movements/InsertMovement?id=@item.id&idUser=@Model.idUser'>Insertar Movimiento</a>
+                                <a class='btn btn-danger btn-sm' onclick='confirmarDesactivacion(@item.id)'>Eliminar</a>
                             </td>
                         </tr>
                     }

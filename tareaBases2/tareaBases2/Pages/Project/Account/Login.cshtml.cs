@@ -10,8 +10,8 @@ namespace tareaBases2.Pages.Project.Account
     {
         // Instancia de la clase para cargar XML
         public XML xmlLoad = new XML();
-
         public usuario infoUsuario = new usuario();
+        public int id;
         public bool bandera = false;
         public string message = "";
 
@@ -19,16 +19,16 @@ namespace tareaBases2.Pages.Project.Account
         {
             xmlLoad.Cargar();
         }
-        public void OnPost() 
+        public void OnPost()
         {
             string auxUsername = Request.Form["username"];
             string auxPassword = Request.Form["password"];
             int resultCode = 0;
 
-            if(auxUsername == "" || auxPassword == "")
+            if (auxUsername == "" || auxPassword == "")
             {
                 message = "Error, ingrese datos";
-                Console.WriteLine(message); 
+                Console.WriteLine(message);
                 return;
             }
 
@@ -62,10 +62,13 @@ namespace tareaBases2.Pages.Project.Account
 
                         // Parámetro de salida
                         command.Parameters.Add("@OutResulTCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        command.Parameters.Add("@Id", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.ExecuteNonQuery();
 
                         // Obtener el valor del parámetro de salida
                         resultCode = Convert.ToInt32(command.Parameters["@OutResulTCode"].Value);
+                        id = Convert.ToInt32(command.Parameters["@Id"].Value);
+                        // Asignar un valor a la propiedad Id
                         Console.WriteLine("Código de resultado: " + resultCode);
 
                     }

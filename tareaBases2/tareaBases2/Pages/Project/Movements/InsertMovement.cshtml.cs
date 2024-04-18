@@ -8,6 +8,7 @@ namespace tareaBases2.Pages.Project.Movements
 {
     public class InsertMovementModel : PageModel
     {
+        public string idUser = "";
         public List<tipoMovimiento> listaTipoMovimiento = new List<tipoMovimiento>();
         public List<movements> listaMovimientos = new List<movements>();
         public movements infoMovements = new movements();
@@ -16,6 +17,7 @@ namespace tareaBases2.Pages.Project.Movements
         public string message = "";
         public void OnGet()
         {
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             try
             {
                 string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2;Integrated Security=True;Encrypt=False";
@@ -78,7 +80,7 @@ namespace tareaBases2.Pages.Project.Movements
 
         public void OnPost()
         {
-
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
         }
     }
 }

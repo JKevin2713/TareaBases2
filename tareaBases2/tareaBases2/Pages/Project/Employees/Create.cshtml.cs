@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
+using System.Web;
 using tareaBases2.Pages.Project;
 
 
@@ -11,29 +15,33 @@ namespace tareaBases2.Pages.Project.Employees
 {
     public class CreateModel : PageModel
     {
+        public string idUser = "";
         // Objeto para almacenar la información del nuevo empleado
         public empleyee infoEmpleyee = new empleyee();
         public jobConnection jobs = new jobConnection();
+        public insertarBitacora insertar = new insertarBitacora();
         // Mensaje de retroalimentación para el usuario
         public string message = "";
+        public string tipoEvento = "";
         // Bandera para indicar si se creó correctamente el empleado
         public bool flag = false;
         // Método ejecutado al recibir una solicitud POST
         // Llamar al método puestos
-        
+
         public void OnGet()
         {
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             jobs.conexion();
         }
 
         public void OnPost()
         {
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             string auxIdentificacion = Request.Form["identificacion"];
             string auxNombre = Request.Form["nombre"];
-            string auxPuesto = Request.Form["puesto"];
-            DateTime fechaContratacion = DateTime.Now;
-
+            String auxPuesto = Request.Form["puesto"];
             int resultCode = 0;
+            DateTime fechaContratacion = DateTime.Now;
 
             // Validar los datos ingresados
             if (ValidarNomSal(auxIdentificacion, auxNombre, auxPuesto) == false)
@@ -42,13 +50,6 @@ namespace tareaBases2.Pages.Project.Employees
                 OnGet();
                 return;
             }
-            // Asignar los valores validados al objeto infoEmpleyee
-            infoEmpleyee.idPuesto = int.Parse(auxPuesto);
-            infoEmpleyee.Identificacion = int.Parse(auxIdentificacion);
-            infoEmpleyee.Nombre = auxNombre;
-            infoEmpleyee.FechaContratacion = fechaContratacion;
-            infoEmpleyee.SaldoVaciones = 0;
-            infoEmpleyee.EsActivo = true;
 
             try
             {
@@ -62,6 +63,14 @@ namespace tareaBases2.Pages.Project.Employees
                 {
                     // Especificar que el comando es un procedimiento almacenado
                     sqlConnection.Open(); // Abrir la conexión
+
+                    // Asignar los valores validados al objeto infoEmpleyee
+                    infoEmpleyee.idPuesto = int.Parse(auxPuesto);
+                    infoEmpleyee.Identificacion = int.Parse(auxIdentificacion);
+                    infoEmpleyee.Nombre = auxNombre;
+                    infoEmpleyee.FechaContratacion = fechaContratacion;
+                    infoEmpleyee.SaldoVaciones = 0;
+                    infoEmpleyee.EsActivo = true;
 
                     // Crear un comando SQL para llamar al stored procedure "registroEmpleado"
                     using (SqlCommand command = new SqlCommand("registroEmpleado", sqlConnection))
@@ -83,9 +92,40 @@ namespace tareaBases2.Pages.Project.Employees
                         // Obtener el valor del parámetro de salida
                         resultCode = Convert.ToInt32(command.Parameters["@OutResulTCode"].Value);
                         Console.WriteLine("Código de resultado: " + resultCode);
-                        
+
                     }
-                    // Cerrar la conexión después de haber terminado de trabajar con ella
+
+                    // Evaluar el resultado del procedimiento almacenado
+                    if (resultCode == 50006)
+                    {
+                        tipoEvento = "Login No Exitoso";
+                        message = "Empleado con mismo nombre ya existe en inserción." +
+                            "Cedula = " + infoEmpleyee.Identificacion +
+                            " Nombre = " + infoEmpleyee.Nombre +
+                            " Puesto = " + infoEmpleyee.idPuesto;
+                    }
+                    else if (resultCode == 50007)
+                    {
+                        tipoEvento = "Login No Exitoso";
+                        message = "Empleado con ValorDocumentoIdentidad ya existe en inserción." +
+                            "Cedula = " + infoEmpleyee.Identificacion +
+                            " Nombre = " + infoEmpleyee.Nombre +
+                            " Puesto = " + infoEmpleyee.idPuesto;
+                    }
+                    else
+                    {
+                        flag = true;
+                        tipoEvento = "Login Exitoso";
+                        message = "Empleado insertado correctamente Cedula." +
+                            "Cedula = " + infoEmpleyee.Identificacion +
+                            " Nombre = " + infoEmpleyee.Nombre +
+                            " Puesto = " + infoEmpleyee.idPuesto;
+                    }
+
+                    // Aca para abajo es para la bitacora
+
+                    insertar.insertarBitacoraEventos(sqlConnection, message, tipoEvento, idUser);
+
                     sqlConnection.Close();
                 }
             }
@@ -94,21 +134,6 @@ namespace tareaBases2.Pages.Project.Employees
                 // Manejar cualquier excepción que pueda ocurrir e imprimir el mensaje de error
                 message = ex.Message;
                 return;
-            }
-
-            // Evaluar el resultado del procedimiento almacenado
-            if (resultCode == 50006)
-            {
-                message = "Error, el nombre del empleado que desea agregar ya existe";
-            }
-            else if (resultCode == 50007)
-            {
-                message = "Error, la cedula del empleado que desea agregar ya existe";
-            }
-            else
-            {
-                flag = true;
-                message = "Se a creado correctamente el empleado";
             }
             OnGet();
         }

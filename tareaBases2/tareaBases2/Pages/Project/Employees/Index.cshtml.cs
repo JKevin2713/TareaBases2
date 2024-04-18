@@ -8,20 +8,24 @@ using System.Data.SqlTypes;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.RegularExpressions;
 using static XML;
+using System.Drawing;
 
 namespace tareaBases2.Pages.Project.Employees
 {
     public class IndexModel : PageModel
     {
+
+        public string idUser = "";
         // Instancia de la clase para establecer la conexión a la base de datos
         public connection conexion = new connection();
         // Lista de objetos 'movements'
         public List<movements> listaMovimientos = new List<movements>();
         // Lista de objetos 'empleyee' filtrados
         public List<empleyee> listaFiltrada = new List<empleyee>();
-        // Método ejecutado cuando se realiza una solicitud GET
+        public insertarBitacora insertar = new insertarBitacora();
         public void OnGet()
         {
+            idUser = Request.Query["idUser"]; // Obtener el idUser del empleado desde la solicitud HTTP
             // Llama a buscarInput con una cadena vacía
             buscarInput("");
         }
@@ -29,6 +33,7 @@ namespace tareaBases2.Pages.Project.Employees
         // Método ejecutado cuando se realiza una solicitud POST
         public void OnPost(string buscar)
         {
+            idUser = Request.Query["idUser"]; // Obtener el idUser del empleado desde la solicitud HTTP
             // Lógica para filtrar con el valor recibido
             if (buscar == null)
             {
@@ -86,6 +91,24 @@ namespace tareaBases2.Pages.Project.Employees
                     int resultCode = Convert.ToInt32(outParameter.Value);
                     // Manejar el código de resultado según sea necesario
                 }
+                string mensaje = "";
+                string tipoEvento = "";
+                int tipoTramite = 0;
+                if (validarBusquedaNombre(buscar) == true)
+                {
+                    tipoEvento = "Consulta con filtro de nombre";
+                    mensaje = " Valor del filtro del nombre " + buscar;
+                    tipoTramite = 11;
+                }
+                else if(validarBusquedaCedula(buscar) == true)
+                {
+                    tipoEvento = "Consulta con filtro de cedula";
+                    mensaje = "Valor del filtro de cedula " + buscar;
+                    tipoTramite = 12;
+                }
+
+                insertar.insertarBitacoraEventos(sqlConnection, mensaje, tipoEvento, idUser);
+
                 sqlConnection.Close();
             }
         }

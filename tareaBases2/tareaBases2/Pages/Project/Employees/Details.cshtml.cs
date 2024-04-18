@@ -7,12 +7,14 @@ namespace tareaBases2.Pages.Project.Employees
 {
     public class DetailsModel : PageModel
     {
+        public string idUser = "";
         public jobs infoJobs = new jobs(); // Objeto para almacenar los detalles del puesto de trabajo
         public empleyee infoEmpleyee = new empleyee(); // Objeto para almacenar los detalles del empleado
         public string message = ""; // Mensaje para manejar errores o información adicional
 
         public void OnGet()
         {
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             try
             {
                 // Cadena de conexión a la base de datos

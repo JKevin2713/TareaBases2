@@ -8,7 +8,7 @@ namespace tareaBases2.Pages.Project.Movements
 {
     public class movementModel : PageModel
     {
-
+        public string idUser = "";
         public jobs infoJobs = new jobs();
         public empleyee infoEmpleyee = new empleyee();
         public List<movements> listaMovimientos = new List<movements>();
@@ -17,6 +17,7 @@ namespace tareaBases2.Pages.Project.Movements
         public string message = "";
         public void OnGet()
         {
+            idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             try
             {
                 string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2;Integrated Security=True;Encrypt=False";
