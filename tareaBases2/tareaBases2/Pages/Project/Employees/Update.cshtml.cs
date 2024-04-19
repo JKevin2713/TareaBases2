@@ -82,6 +82,7 @@ namespace tareaBases2.Pages.Project.Employees
             string auxNombre = Request.Form["nombre"];
             int resultCode = 0;
 
+
             // Validar los datos ingresados
             if (ValidarNomSal(auxIdentificacion, auxNombre, auxPuesto) == false)
             {
@@ -118,6 +119,10 @@ namespace tareaBases2.Pages.Project.Employees
                         SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
                         outResultCodeParam.Direction = ParameterDirection.Output;
                         command.Parameters.Add(outResultCodeParam);
+
+
+                        resultCode = Convert.ToInt32(command.Parameters["@OutResulTCode"].Value);
+                        Console.WriteLine("Código de resultado: " + resultCode);
 
                         command.ExecuteNonQuery();
                     }
