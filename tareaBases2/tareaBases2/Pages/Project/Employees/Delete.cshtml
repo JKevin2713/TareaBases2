@@ -4,9 +4,8 @@
 @{
     empleyee infoEmpleyee = new empleyee();
     insertarBitacora insertar = new insertarBitacora();
-    String id = Request.Query["id"];
-    String idUser = Request.Query["idUser"];
-    String bandera = Request.Query["bandera"];
+    string id = Request.Query["id"];
+    string idUser = Request.Query["idUser"];
     try
     {
         string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2" +
@@ -19,14 +18,21 @@
             {
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Agregar parámetro de salida
-                SqlParameter outParameter = new SqlParameter("@OutResulTCode", SqlDbType.Int);
-                outParameter.Direction = ParameterDirection.Output;
-                command.Parameters.Add(outParameter);
 
                 // Agregar parámetro de entrada
                 command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@idPuesto", 0);
                 command.Parameters.AddWithValue("@bandera", 0);
+
+                SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                outResultCodeParam.Direction = ParameterDirection.Output;
+                command.Parameters.Add(outResultCodeParam);
+
+
+                // Parámetro de salida para el ID del movimiento insertado
+                SqlParameter outPuesto = new SqlParameter("@OutPuesto", SqlDbType.VarChar, 64);
+                outPuesto.Direction = ParameterDirection.Output;
+                command.Parameters.Add(outPuesto);
 
                 // Ejecutar el comando y procesar los resultados
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -45,50 +51,61 @@
 
             string tipoEvento = "";
             string message = "";
+            int resultCode = 0;
+            string puestos = "";
 
-            if(bandera == "1")
+            // Crear un comando SQL para llamar al procedimiento almacenado
+            using (SqlCommand command = new SqlCommand("eliminarEmpleado", sqlConnection))
             {
-                // Crear un comando SQL para llamar al procedimiento almacenado
-                using (SqlCommand command = new SqlCommand("eliminarEmpleado", sqlConnection))
-                {
-                    // Especificar que el comando es un procedimiento almacenado
-                    command.CommandType = CommandType.StoredProcedure;
+                // Especificar que el comando es un procedimiento almacenado
+                command.CommandType = CommandType.StoredProcedure;
 
-                    // Parámetros de entrada
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@bandera", 1);
+                // Parámetros de entrada
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@idPuesto", infoEmpleyee.idPuesto);
+                command.Parameters.AddWithValue("@bandera", 1);
 
-                    // Parámetro de salida para el código de resultado
-                    SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
-                    outResultCodeParam.Direction = ParameterDirection.Output;
-                    command.Parameters.Add(outResultCodeParam);
+                SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                outResultCodeParam.Direction = ParameterDirection.Output;
+                command.Parameters.Add(outResultCodeParam);
 
-                    // Ejecutar el procedimiento almacenado
-                    command.ExecuteNonQuery();
-                }
 
-                tipoEvento = "Borrado exitoso";
-                message = "Borrado exitoso." +
-                    "Cedula = " + infoEmpleyee.Identificacion +
-                    " Nombre = " + infoEmpleyee.Nombre +
-                    " Puesto = " + infoEmpleyee.idPuesto +
-                    " Saldo Vacaciones = " + infoEmpleyee.SaldoVaciones;
+                // Parámetro de salida para el ID del movimiento insertado
+                SqlParameter outPuesto = new SqlParameter("@OutPuesto", SqlDbType.VarChar, 64);
+                outPuesto.Direction = ParameterDirection.Output;
+                command.Parameters.Add(outPuesto);
 
+
+                command.ExecuteNonQuery();
+
+                // Obtener el valor del parámetro de salida
+                resultCode = Convert.ToInt32(outResultCodeParam.Value);
+                puestos = Convert.ToString(outPuesto.Value);
             }
-            else
+            if (resultCode == 50008)
             {
                 tipoEvento = "Intento de borrado";
                 message = "Intento de borrado." +
                     "Cedula = " + infoEmpleyee.Identificacion +
                     " Nombre = " + infoEmpleyee.Nombre +
-                    " Puesto = " + infoEmpleyee.idPuesto +
+                    " Puesto = " + puestos +
                     " Saldo Vacaciones = " + infoEmpleyee.SaldoVaciones;
+            }
+            else
+            {
+                tipoEvento = "Borrado exitoso";
+                message = "Borrado exitoso." +
+                    "Cedula = " + infoEmpleyee.Identificacion +
+                    " Nombre = " + infoEmpleyee.Nombre +
+                    " Puesto = " + puestos +
+                    " Saldo Vacaciones = " + infoEmpleyee.SaldoVaciones;
+
             }
 
 
-            insertar.insertarBitacoraEventos(sqlConnection, message, tipoEvento, idUser);
+        insertar.insertarBitacoraEventos(sqlConnection, message, tipoEvento, idUser);
 
-            sqlConnection.Close();
+        sqlConnection.Close();
         }
     }
     catch(Exception ex)

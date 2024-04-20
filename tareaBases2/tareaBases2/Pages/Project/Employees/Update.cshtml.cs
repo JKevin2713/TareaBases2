@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static XML;
 
 namespace tareaBases2.Pages.Project.Employees
@@ -10,6 +11,7 @@ namespace tareaBases2.Pages.Project.Employees
     public class UpdateModel : PageModel
     {
         public string idUser = "";
+        public string id = "";
         public jobConnection jobs = new jobConnection();
         public empleyee infoEmpleyee = new empleyee();
         public insertarBitacora insertar = new insertarBitacora();
@@ -22,7 +24,7 @@ namespace tareaBases2.Pages.Project.Employees
         public int puestoAntesEditar = 0;
         public void OnGet()
         {
-            String id = Request.Query["id"];
+            id = Request.Query["id"];
             idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
             try
             {
@@ -40,6 +42,27 @@ namespace tareaBases2.Pages.Project.Employees
                         SqlParameter outParameter = new SqlParameter("@OutResulTCode", SqlDbType.Int);
                         outParameter.Direction = ParameterDirection.Output;
                         command.Parameters.Add(outParameter);
+
+
+                        // Parámetro de salida para el ID del movimiento insertado
+                        SqlParameter outCedulaAnterior = new SqlParameter("@OutCedulaAnterior", SqlDbType.Int);
+                        outCedulaAnterior.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outCedulaAnterior);
+
+                        // Parámetro de salida para el nuevo saldo
+                        SqlParameter outNombreAnterior = new SqlParameter("@OutNombreAnterior", SqlDbType.VarChar, 64);
+                        outNombreAnterior.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outNombreAnterior);
+
+                        // Parámetro de salida para el saldo actual
+                        SqlParameter outPuestoAnterior = new SqlParameter("@OutPuestoAnterior", SqlDbType.VarChar, 64);
+                        outPuestoAnterior.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outPuestoAnterior);
+
+                        // Parámetro de salida para el saldo actual
+                        SqlParameter outPuestoDespues = new SqlParameter("@OutPuestoDespues", SqlDbType.VarChar, 64);
+                        outPuestoDespues.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outPuestoDespues);
 
                         // Agregar parámetro de entrada
                         command.Parameters.AddWithValue("@id", id);
@@ -75,8 +98,14 @@ namespace tareaBases2.Pages.Project.Employees
         }
         public void OnPost()
         {
+            int cedulaAnterior = 0;
+            string nombreAnterior = "";
+            string puestoAnterior = "";
+            string puestoDespues = "";
+
+
             idUser = Request.Query["idUser"]; // Obtener el ID del empleado desde la solicitud HTTP
-            String id = Request.Query["id"];
+            id = Request.Query["id"];
             string auxPuesto = Request.Form["puesto"];
             string auxIdentificacion = Request.Form["identificacion"];
             string auxNombre = Request.Form["nombre"];
@@ -121,50 +150,86 @@ namespace tareaBases2.Pages.Project.Employees
                         command.Parameters.Add(outResultCodeParam);
 
 
-                        resultCode = Convert.ToInt32(command.Parameters["@OutResulTCode"].Value);
+                        // Parámetro de salida para el ID del movimiento insertado
+                        SqlParameter outCedulaAnterior = new SqlParameter("@OutCedulaAnterior", SqlDbType.Int);
+                        outCedulaAnterior.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outCedulaAnterior);
+
+                        // Parámetro de salida para el nuevo saldo
+                        SqlParameter outNombreAnterior = new SqlParameter("@OutNombreAnterior", SqlDbType.VarChar, 64);
+                        outNombreAnterior.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outNombreAnterior);
+
+                        // Parámetro de salida para el saldo actual
+                        SqlParameter outPuestoAnterior = new SqlParameter("@OutPuestoAnterior", SqlDbType.VarChar, 64);
+                        outPuestoAnterior.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outPuestoAnterior);
+
+                        // Parámetro de salida para el saldo actual
+                        SqlParameter outPuestoDespues = new SqlParameter("@OutPuestoDespues", SqlDbType.VarChar, 64);
+                        outPuestoDespues.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outPuestoDespues);
+
+
+                        command.ExecuteNonQuery(); // Ejecutar el comando
+
+                        // Obtener el valor de los parámetros de salida
+                        resultCode = Convert.ToInt32(outResultCodeParam.Value);
+                        cedulaAnterior = Convert.ToInt32(outCedulaAnterior.Value);
+                        nombreAnterior = Convert.ToString(outNombreAnterior.Value);
+                        puestoAnterior = Convert.ToString(outPuestoAnterior.Value);
+                        puestoDespues = Convert.ToString(outPuestoDespues.Value);
+
+                        // Imprimir los valores obtenidos
                         Console.WriteLine("Código de resultado: " + resultCode);
+                        Console.WriteLine("cedula: " + cedulaAnterior);
+                        Console.WriteLine("Nombre: " + nombreAnterior);
+                        Console.WriteLine("Nombre tipo de movimiento antes: " + puestoAnterior);
+                        Console.WriteLine("Nombre tipo de movimiento modifica: " + puestoDespues);
 
-                        command.ExecuteNonQuery();
                     }
-
+                    string messageBase = "";
                     string tipoEvento = "";
                     // Evaluar el resultado del procedimiento almacenado
                     if (resultCode == 50006)
                     {
                         tipoEvento = "Update no exitoso";
-                        message = "Empleado con ValorDocumentoIdentidad ya existe en actualizacion" +
-                            " Cedula anterior = " + identidadAntesEditar +
-                            " Nombre anterior = " + nombreAntesEditar +
-                            " Puesto anterior = " + puestoAntesEditar +
+                        message = "Empleado con ValorDocumentoIdentidad ya existe en actualizacion";
+                        messageBase = "Empleado con ValorDocumentoIdentidad ya existe en actualizacion" +
+                            " Cedula anterior = " + cedulaAnterior +
+                            " Nombre anterior = " + nombreAnterior +
+                            " Puesto anterior = " + puestoAnterior +
                             " Cedula = " + infoEmpleyee.Identificacion +
                             " Nombre = " + infoEmpleyee.Nombre +
-                            " Puesto = " + infoEmpleyee.idPuesto;
+                            " Puesto = " + puestoDespues;
                     }
                     else if (resultCode == 50007)
                     {
                         tipoEvento = "Update no exitoso";
-                        message = "Empleado con mismo nombre ya existe en actualización" +
-                            " Cedula anterior = " + identidadAntesEditar +
-                            " Nombre anterior = " + nombreAntesEditar +
-                            " Puesto anterior = " + puestoAntesEditar +
+                        message = "Empleado con mismo nombre ya existe en actualización";
+                        messageBase = "Empleado con mismo nombre ya existe en actualización" +
+                            " Cedula anterior = " + cedulaAnterior +
+                            " Nombre anterior = " + nombreAnterior +
+                            " Puesto anterior = " + puestoAnterior +
                             " Cedula = " + infoEmpleyee.Identificacion +
                             " Nombre = " + infoEmpleyee.Nombre +
-                            " Puesto = " + infoEmpleyee.idPuesto;
+                            " Puesto = " + puestoDespues;
                     }
                     else
                     {
                         flag = true;
                         tipoEvento  = "Update exitoso";
-                        message = "Se a creado correctamente el empleado" +
-                            " Cedula anterior = " + identidadAntesEditar +
-                            " Nombre anterior = " + nombreAntesEditar +
-                            " Puesto anterior = " + puestoAntesEditar +
+                        message = "Se a creado correctamente el empleado";
+                        messageBase = "Se a creado correctamente el empleado" +
+                            " Cedula anterior = " + cedulaAnterior +
+                            " Nombre anterior = " + nombreAnterior +
+                            " Puesto anterior = " + puestoAnterior +
                             " Cedula = " + infoEmpleyee.Identificacion +
                             " Nombre = " + infoEmpleyee.Nombre +
-                            " Puesto = " + infoEmpleyee.idPuesto;
+                            " Puesto = " + puestoDespues;
                     }
 
-                    insertar.insertarBitacoraEventos(sqlConnection, message, tipoEvento, idUser);
+                    insertar.insertarBitacoraEventos(sqlConnection, messageBase, tipoEvento, idUser);
 
                     sqlConnection.Close();
                 }

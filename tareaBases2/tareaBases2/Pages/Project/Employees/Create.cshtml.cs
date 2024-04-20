@@ -41,6 +41,7 @@ namespace tareaBases2.Pages.Project.Employees
             string auxNombre = Request.Form["nombre"];
             String auxPuesto = Request.Form["puesto"];
             int resultCode = 0;
+            string puestos = "";
             DateTime fechaContratacion = DateTime.Now;
 
             // Validar los datos ingresados
@@ -85,46 +86,58 @@ namespace tareaBases2.Pages.Project.Employees
                         command.Parameters.AddWithValue("@SaldoVacaciones", infoEmpleyee.SaldoVaciones);
                         command.Parameters.AddWithValue("@EsActivo", infoEmpleyee.EsActivo);
 
-                        // Parámetro de salida
-                        command.Parameters.Add("@OutResulTCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        SqlParameter outResultCodeParam = new SqlParameter("@OutResulTCode", SqlDbType.Int);
+                        outResultCodeParam.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outResultCodeParam);
+
+
+                        // Parámetro de salida para el ID del movimiento insertado
+                        SqlParameter outPuesto = new SqlParameter("@OutPuesto", SqlDbType.VarChar, 64);
+                        outPuesto.Direction = ParameterDirection.Output;
+                        command.Parameters.Add(outPuesto);
+
+
                         command.ExecuteNonQuery();
 
                         // Obtener el valor del parámetro de salida
-                        resultCode = Convert.ToInt32(command.Parameters["@OutResulTCode"].Value);
-                        Console.WriteLine("Código de resultado: " + resultCode);
+                        resultCode = Convert.ToInt32(outResultCodeParam.Value);
+                        puestos = Convert.ToString(outPuesto.Value);
 
                     }
-
+                    string messageBase = "";
                     // Evaluar el resultado del procedimiento almacenado
                     if (resultCode == 50006)
                     {
                         tipoEvento = "Login No Exitoso";
-                        message = "Empleado con mismo nombre ya existe en inserción." +
+                        message = "Empleado con mismo nombre ya existe en inserción.";
+                        messageBase = "Empleado con mismo nombre ya existe en inserción." +
                             "Cedula = " + infoEmpleyee.Identificacion +
                             " Nombre = " + infoEmpleyee.Nombre +
-                            " Puesto = " + infoEmpleyee.idPuesto;
+                            " Puesto = " + puestos;
                     }
                     else if (resultCode == 50007)
                     {
                         tipoEvento = "Login No Exitoso";
-                        message = "Empleado con ValorDocumentoIdentidad ya existe en inserción." +
+                        message = "Empleado con ValorDocumentoIdentidad ya existe en inserción.";
+                        messageBase = "Empleado con ValorDocumentoIdentidad ya existe en inserción." +
                             "Cedula = " + infoEmpleyee.Identificacion +
                             " Nombre = " + infoEmpleyee.Nombre +
-                            " Puesto = " + infoEmpleyee.idPuesto;
+                            " Puesto = " + puestos;
                     }
                     else
                     {
                         flag = true;
                         tipoEvento = "Login Exitoso";
-                        message = "Empleado insertado correctamente Cedula." +
+                        message = "Empleado insertado correctamente Cedula.";
+                        messageBase = "Empleado insertado correctamente Cedula." +
                             "Cedula = " + infoEmpleyee.Identificacion +
                             " Nombre = " + infoEmpleyee.Nombre +
-                            " Puesto = " + infoEmpleyee.idPuesto;
+                            " Puesto = " + puestos;
                     }
 
                     // Aca para abajo es para la bitacora
 
-                    insertar.insertarBitacoraEventos(sqlConnection, message, tipoEvento, idUser);
+                    insertar.insertarBitacoraEventos(sqlConnection, messageBase, tipoEvento, idUser);
 
                     sqlConnection.Close();
                 }
