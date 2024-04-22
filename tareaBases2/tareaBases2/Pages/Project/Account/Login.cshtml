@@ -75,6 +75,7 @@
     <script>
         // Obtenemos los valores del tiempo e intentos del almacenamiento local al cargar la página
         var tiempoRestante = localStorage.getItem('tiempoRestante') || 30 * 60; // 30 minutos en segundos
+        var intentos = localStorage.getItem('intentosFallidos') || 0;
 
         // Actualiza el reloj cada segundo
         var intervalo = setInterval(actualizarReloj, 1000);

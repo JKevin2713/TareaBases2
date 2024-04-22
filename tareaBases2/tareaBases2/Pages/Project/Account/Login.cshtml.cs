@@ -80,11 +80,13 @@ namespace tareaBases2.Pages.Project.Account
                     if (resultCode == 50006)
                     {
                         tipoEvento = "Login No Exitoso";
+                        message = "Error, la contraseña ingresado no incide";
                         mensaje = "Error, la contraseña ingresado no incide";
                     }
                     else if (resultCode == 50007)
                     {
                         tipoEvento = "Login No Exitoso";
+                        message = "Error, usuario no existe";
                         mensaje = "Error, usuario no existe";
 
                     }
@@ -92,6 +94,7 @@ namespace tareaBases2.Pages.Project.Account
                     {
                         bandera = true;
                         tipoEvento = "Login Exitoso";
+                        message = "Inicia de sesion exitosa";
                         mensaje = "Inicia de sesion exitosa";
                     }
 

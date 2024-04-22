@@ -1,4 +1,5 @@
 ﻿
+using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Xml;
@@ -9,26 +10,34 @@ public class XML
 {
     public void CargarPuestos(List<Puestos> listaPuestos, string connectionString)
     {
-
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
 
-            var query = "INSERT INTO Puestos (Nombre, SalarioxHora) VALUES (@Nombre, @SalarioxHora)";
+            var query = "EXEC CargarPuestos @InNombre, @InSalarioxHora, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
                 foreach (var puesto in listaPuestos)
                 {
                     command.Parameters.Clear();
 
-                    command.Parameters.AddWithValue("@Nombre", puesto.Nombre);
-                    command.Parameters.AddWithValue("@SalarioxHora", puesto.SalarioxHora);
+                    command.Parameters.AddWithValue("@InNombre", puesto.Nombre);
+                    command.Parameters.AddWithValue("@InSalarioxHora", puesto.SalarioxHora);
+                    SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outParam);
 
                     command.ExecuteNonQuery();
+
+                    int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                    // Aquí puedes manejar el resultCode según sea necesario
                 }
             }
         }
     }
+
 
 
     public void CargarTipoEvento(List<TiposEvento> listaTiposEvento, string connectionString)
@@ -37,21 +46,30 @@ public class XML
         {
             connection.Open();
 
-            var query = "INSERT INTO TipoEvento (Id, Nombre) VALUES (@Id, @Nombre)";
+            var query = "EXEC CargarTipoEvento @InId, @InNombre, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
                 foreach (var tipoEvento in listaTiposEvento)
                 {
                     command.Parameters.Clear();
 
-                    command.Parameters.AddWithValue("@Id", tipoEvento.Id);
-                    command.Parameters.AddWithValue("@Nombre", tipoEvento.Nombre);
+                    command.Parameters.AddWithValue("@InId", tipoEvento.Id);
+                    command.Parameters.AddWithValue("@InNombre", tipoEvento.Nombre);
+                    SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outParam);
 
                     command.ExecuteNonQuery();
+
+                    int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                    // Aquí puedes manejar el resultCode según sea necesario
                 }
             }
         }
     }
+
 
     public void CargarTipoMovimiento(List<TiposMovimientos> listaTiposMovimientos, string connectionString)
     {
@@ -59,22 +77,31 @@ public class XML
         {
             connection.Open();
 
-            var query = "INSERT INTO TipoMovimiento (Id, Nombre, TipoAccion) VALUES (@Id, @Nombre, @TipoAccion)";
+            var query = "EXEC CargarTipoMovimiento @InId, @InNombre, @InTipoAccion, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
                 foreach (var tipoMovimiento in listaTiposMovimientos)
                 {
                     command.Parameters.Clear();
 
-                    command.Parameters.AddWithValue("@Id", tipoMovimiento.Id);
-                    command.Parameters.AddWithValue("@Nombre", tipoMovimiento.Nombre);
-                    command.Parameters.AddWithValue("@TipoAccion", tipoMovimiento.TipoAccion);
+                    command.Parameters.AddWithValue("@InId", tipoMovimiento.Id);
+                    command.Parameters.AddWithValue("@InNombre", tipoMovimiento.Nombre);
+                    command.Parameters.AddWithValue("@InTipoAccion", tipoMovimiento.TipoAccion);
+                    SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outParam);
 
                     command.ExecuteNonQuery();
+
+                    int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                    // Aquí puedes manejar el resultCode según sea necesario
                 }
             }
         }
     }
+
 
     public void CargarError(List<Error> listaErrores, string connectionString)
     {
@@ -82,21 +109,30 @@ public class XML
         {
             connection.Open();
 
-            var query = "INSERT INTO Error (Codigo, Descripcion) VALUES (@Codigo, @Descripcion)";
+            var query = "EXEC CargarError @InCodigo, @InDescripcion, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
                 foreach (var error in listaErrores)
                 {
                     command.Parameters.Clear();
 
-                    command.Parameters.AddWithValue("@Codigo", error.Codigo);
-                    command.Parameters.AddWithValue("@Descripcion", error.Descripcion);
+                    command.Parameters.AddWithValue("@InCodigo", error.Codigo);
+                    command.Parameters.AddWithValue("@InDescripcion", error.Descripcion);
+                    SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outParam);
 
                     command.ExecuteNonQuery();
+
+                    int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                    // Aquí puedes manejar el resultCode según sea necesario
                 }
             }
         }
     }
+
 
     public int ObtenerIdPuesto(string nombrePuesto, string connectionString)
     {
@@ -104,15 +140,28 @@ public class XML
         {
             connection.Open();
 
-            var query = "SELECT Id FROM Puestos WHERE Nombre = @Nombre";
+            var query = "EXEC ObtenerIdPuesto @InNombre, @OutId OUTPUT, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@Nombre", nombrePuesto);
-
-                var result = command.ExecuteScalar();
-                if (result != null)
+                command.Parameters.AddWithValue("@InNombre", nombrePuesto);
+                SqlParameter outIdParam = new SqlParameter("@OutId", SqlDbType.Int)
                 {
-                    return (int)result;
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outIdParam);
+                SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outParam);
+
+                command.ExecuteNonQuery();
+
+                int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+
+                if (resultCode == 0)
+                {
+                    return (int)command.Parameters["@OutId"].Value;
                 }
                 else
                 {
@@ -122,31 +171,41 @@ public class XML
         }
     }
 
+
     public void CargarEmpleado(List<infoEmpleyee> listaEmpleyees, string connectionString)
     {
         using (var connection = new SqlConnection(connectionString))
         {
             connection.Open();
 
-            var query = "INSERT INTO Empleado (IdPuesto, ValorDocumentoIdentidad, Nombre, FechaContratacion, SaldoVacaciones, EsActivo) VALUES (@IdPuesto, @ValorDocumentoIdentidad, @Nombre, @FechaContratacion, @SaldoVacaciones, @EsActivo)";
+            var query = "EXEC CargarEmpleado @InIdPuesto, @InValorDocumentoIdentidad, @InNombre, @InFechaContratacion, @InSaldoVacaciones, @InEsActivo, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
                 foreach (var empleado in listaEmpleyees)
                 {
                     command.Parameters.Clear();
 
-                    command.Parameters.AddWithValue("@IdPuesto", empleado.IdPuesto);
-                    command.Parameters.AddWithValue("@ValorDocumentoIdentidad", empleado.ValorDocumentoIdentidad);
-                    command.Parameters.AddWithValue("@Nombre", empleado.Nombre);
-                    command.Parameters.AddWithValue("@FechaContratacion", empleado.FechaContratacion);
-                    command.Parameters.AddWithValue("@SaldoVacaciones", empleado.SaldoVacaciones);
-                    command.Parameters.AddWithValue("@EsActivo", empleado.EsActivo);
+                    command.Parameters.AddWithValue("@InIdPuesto", empleado.IdPuesto);
+                    command.Parameters.AddWithValue("@InValorDocumentoIdentidad", empleado.ValorDocumentoIdentidad);
+                    command.Parameters.AddWithValue("@InNombre", empleado.Nombre);
+                    command.Parameters.AddWithValue("@InFechaContratacion", empleado.FechaContratacion);
+                    command.Parameters.AddWithValue("@InSaldoVacaciones", empleado.SaldoVacaciones);
+                    command.Parameters.AddWithValue("@InEsActivo", empleado.EsActivo);
+                    SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outParam);
 
                     command.ExecuteNonQuery();
+
+                    int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                    // Aquí puedes manejar el resultCode según sea necesario
                 }
             }
         }
     }
+
 
     public void CargarUsuario(List<Usuarios> listaUsuarios, string connectionString)
     {
@@ -154,22 +213,31 @@ public class XML
         {
             connection.Open();
 
-            var query = "INSERT INTO Usuario (Id, Username, Password) VALUES (@Id, @Nombre, @Pass)";
+            var query = "EXEC CargarUsuario @InId, @InUsername, @InPassword, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
                 foreach (var usuario in listaUsuarios)
                 {
                     command.Parameters.Clear();
 
-                    command.Parameters.AddWithValue("@Id", usuario.Id);
-                    command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                    command.Parameters.AddWithValue("@Pass", usuario.Pass);
+                    command.Parameters.AddWithValue("@InId", usuario.Id);
+                    command.Parameters.AddWithValue("@InUsername", usuario.Nombre);
+                    command.Parameters.AddWithValue("@InPassword", usuario.Pass);
+                    SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outParam);
 
                     command.ExecuteNonQuery();
+
+                    int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                    // Aquí puedes manejar el resultCode según sea necesario
                 }
             }
         }
     }
+
 
     public int ObtenerIdTipoMovimiento(string nombreTipoMovimiento, string connectionString)
     {
@@ -177,19 +245,67 @@ public class XML
         {
             connection.Open();
 
-            var query = "SELECT id FROM TipoMovimiento WHERE Nombre = @Nombre";
+            var query = "EXEC ObtenerIdTipoMovimiento @InNombre, @OutId OUTPUT, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@Nombre", nombreTipoMovimiento);
-
-                var result = command.ExecuteScalar();
-                if (result != null)
+                command.Parameters.AddWithValue("@InNombre", nombreTipoMovimiento);
+                SqlParameter outIdParam = new SqlParameter("@OutId", SqlDbType.Int)
                 {
-                    return (int)result;
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outIdParam);
+                SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outParam);
+
+                command.ExecuteNonQuery();
+
+                int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                if (resultCode == 0)
+                {
+                    return (int)command.Parameters["@OutId"].Value;
                 }
                 else
                 {
                     throw new Exception("No se encontró un tipo de movimiento con el nombre especificado.");
+                }
+            }
+        }
+    }
+
+    public int ObtenerPostByUser(string nombreUsuario, string connectionString)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            var query = "EXEC ObtenerIdUsuario @InUsername, @OutPostByUser OUTPUT, @OutResulTCode OUTPUT";
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@InUsername", nombreUsuario);
+                SqlParameter outPostByUserParam = new SqlParameter("@OutPostByUser", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outPostByUserParam);
+                SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outParam);
+
+                command.ExecuteNonQuery();
+
+                int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                if (resultCode == 0)
+                {
+                    return (int)command.Parameters["@OutPostByUser"].Value;
+                }
+                else
+                {
+                    throw new Exception("No se encontró un usuario con el nombre especificado.");
                 }
             }
         }
@@ -201,27 +317,36 @@ public class XML
         {
             connection.Open();
 
-            var query = "INSERT INTO Movimiento (ValorDocId, IdTipoMovimiento, Fecha, Monto, NuevoSaldo, PostByUser, PostInIp, PostTime) VALUES (@ValorDocId, @IdTipoMovimiento, @Fecha, @Monto, @NuevoSaldo, @PostByUser, @PostInIp, @PostTime)";
+            var query = "EXEC CargarMovimiento @InValorDocId, @InIdTipoMovimiento, @InFecha, @InMonto, @InNuevoSaldo, @InPostByUser, @InPostInIp, @InPostTime, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
                 foreach (var movimiento in listaMovimientos)
                 {
                     command.Parameters.Clear();
 
-                    command.Parameters.AddWithValue("@ValorDocId", movimiento.ValorDocId);
-                    command.Parameters.AddWithValue("@IdTipoMovimiento", movimiento.IdTipoMovimiento);
-                    command.Parameters.AddWithValue("@Fecha", movimiento.Fecha);
-                    command.Parameters.AddWithValue("@Monto", movimiento.Monto);
-                    command.Parameters.AddWithValue("@NuevoSaldo", movimiento.NuevoSaldo);
-                    command.Parameters.AddWithValue("@PostByUser", movimiento.PostByUser);
-                    command.Parameters.AddWithValue("@PostInIp", movimiento.PostInIP);
-                    command.Parameters.AddWithValue("@PostTime", movimiento.PostTime);
+                    command.Parameters.AddWithValue("@InValorDocId", movimiento.ValorDocId);
+                    command.Parameters.AddWithValue("@InIdTipoMovimiento", movimiento.IdTipoMovimiento);
+                    command.Parameters.AddWithValue("@InFecha", movimiento.Fecha);
+                    command.Parameters.AddWithValue("@InMonto", movimiento.Monto);
+                    command.Parameters.AddWithValue("@InNuevoSaldo", movimiento.NuevoSaldo);
+                    command.Parameters.AddWithValue("@InPostByUser", movimiento.PostByUser);
+                    command.Parameters.AddWithValue("@InPostInIp", movimiento.PostInIP);
+                    command.Parameters.AddWithValue("@InPostTime", movimiento.PostTime);
+                    SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outParam);
 
                     command.ExecuteNonQuery();
+
+                    int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                    // Aquí puedes manejar el resultCode según sea necesario
                 }
             }
         }
     }
+
 
     public bool ObtenerEstado(string connectionString)
     {
@@ -229,13 +354,26 @@ public class XML
         {
             connection.Open();
 
-            var query = "SELECT TOP 1 estado FROM Carga";
+            var query = "EXEC ObtenerEstadoCarga @OutEstado OUTPUT, @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
-                var result = command.ExecuteScalar();
-                if (result != null)
+                SqlParameter outEstadoParam = new SqlParameter("@OutEstado", SqlDbType.Bit)
                 {
-                    return (bool)result;
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outEstadoParam);
+                SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outParam);
+
+                command.ExecuteNonQuery();
+
+                int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                if (resultCode == 0)
+                {
+                    return (bool)command.Parameters["@OutEstado"].Value;
                 }
                 else
                 {
@@ -251,13 +389,26 @@ public class XML
         {
             connection.Open();
 
-            var query = "UPDATE Carga SET estado = 1";
+            var query = "EXEC CambiarEstadoCarga @OutResulTCode OUTPUT";
             using (var command = new SqlCommand(query, connection))
             {
+                SqlParameter outParam = new SqlParameter("@OutResulTCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outParam);
+
                 command.ExecuteNonQuery();
+
+                int resultCode = (int)command.Parameters["@OutResulTCode"].Value;
+                // Aquí puedes manejar el resultCode según sea necesario
             }
         }
     }
+
+
+
+
 
     public void Cargar()
     {
@@ -274,7 +425,8 @@ public class XML
         XmlDocument doc = new XmlDocument();
         doc.Load("Pages/Project/datos.xml");
 
-        bool Estado = ObtenerEstado(connectionString); 
+        bool Estado = ObtenerEstado(connectionString);
+
         if (Estado == false)
         {
             foreach (XmlNode node in doc.DocumentElement.ChildNodes)
@@ -384,25 +536,15 @@ public class XML
                         {
                         }
 
-                        string AuxPostByUser = node2.Attributes["PostByUser"].InnerText;
+                        string PostByUserAux = node2.Attributes["PostByUser"].InnerText;
+                        int PostByUser = ObtenerPostByUser(PostByUserAux, connectionString);
                         string PosInIP = node2.Attributes["PostInIP"].InnerText;
                         string PostTime = node2.Attributes["PostTime"].InnerText;
                         DateTime PostTimeAux;
-                        int PostByUser = 0;
                         if (DateTime.TryParseExact(PostTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out PostTimeAux))
                         {
                         }
 
-                        for (int i = 0; i < listaUsuarios.Count; i++)
-                        {
-                            if(AuxPostByUser == listaUsuarios[i].Nombre)
-                            {
-                                PostByUser = i + 1;
-                            }
-
-                        }
-
-                        Console.WriteLine(PostByUser);
                         listaMovimientos.Add(new Movimientos
                         {
                             ValorDocId = ValorDocId,
