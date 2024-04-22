@@ -60,9 +60,14 @@
                             </script>
                         </div>
                     }
+                    @if(Model.intentos == 5)
+                    {
+                        <a href="/Project/Account/LoginOut">Cerrar sesión</a>
+                    }
+
                     <div class="row mb-3">
                         <div class="offset-sm-3 col-sm-3 d-grid">
-                            <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                            <button type="submit" name="login" class="btn btn-primary">Iniciar sesión</button>
                         </div>
                     </div>
                 </form>
@@ -75,7 +80,6 @@
     <script>
         // Obtenemos los valores del tiempo e intentos del almacenamiento local al cargar la página
         var tiempoRestante = localStorage.getItem('tiempoRestante') || 30 * 60; // 30 minutos en segundos
-        var intentos = localStorage.getItem('intentosFallidos') || 0;
 
         // Actualiza el reloj cada segundo
         var intervalo = setInterval(actualizarReloj, 1000);
@@ -102,6 +106,8 @@
             }
         }
     </script>
+
 </body>
 </html>
+
 

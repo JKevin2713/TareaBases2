@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using static XML;
 using System.Data.SqlClient;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
+using System;
+using System.Reflection;
 
 namespace tareaBases2.Pages.Project.Account
 {
@@ -11,15 +15,18 @@ namespace tareaBases2.Pages.Project.Account
         // Instancia de la clase para cargar XML
         public XML xmlLoad = new XML();
         public usuario infoUsuario = new usuario();
+        public insertarBitacora insertar = new insertarBitacora();
         public int id;
+        public int intentos;
         public bool bandera = false;
         public string message = "";
-        public insertarBitacora insertar = new insertarBitacora();
+        public string tiempo = "";
 
         public void OnGet()
         {
             xmlLoad.Cargar();
         }
+
         public void OnPost()
         {
             string auxUsername = Request.Form["username"];
@@ -33,15 +40,12 @@ namespace tareaBases2.Pages.Project.Account
                 return;
             }
 
-
             // Asignar los valores validados al objeto infoUsuario
             infoUsuario.Username = auxUsername;
             infoUsuario.Password = auxPassword;
 
-
             try
             {
-
                 // Cadena de conexión a la base de datos
                 string connectionString = "Data Source=LAPTOP-K8CP12F2;Initial Catalog=tarea2" +
                                           ";Integrated Security=True;Encrypt=False";
@@ -49,57 +53,68 @@ namespace tareaBases2.Pages.Project.Account
                 // Establecer una conexión con la base de datos utilizando la cadena de conexión
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
-                    // Especificar que el comando es un procedimiento almacenado
                     sqlConnection.Open(); // Abrir la conexión
 
-                    // Crear un comando SQL para llamar al stored procedure "registroEmpleado"
+                    // Crear un comando SQL para llamar al stored procedure "inicioSesion"
                     using (SqlCommand command = new SqlCommand("inicioSesion", sqlConnection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Parámetros de entraada
+                        // Parámetros de entrada
                         command.Parameters.AddWithValue("@username", infoUsuario.Username);
                         command.Parameters.AddWithValue("@password", infoUsuario.Password);
 
                         // Parámetro de salida
                         command.Parameters.Add("@OutResulTCode", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@Id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        command.Parameters.Add("@Intentos", SqlDbType.Int).Direction = ParameterDirection.Output;
                         command.ExecuteNonQuery();
 
                         // Obtener el valor del parámetro de salida
                         resultCode = Convert.ToInt32(command.Parameters["@OutResulTCode"].Value);
                         id = Convert.ToInt32(command.Parameters["@Id"].Value);
-                        // Asignar un valor a la propiedad Id
-                        Console.WriteLine("Código de resultado: " + resultCode);
-
+                        intentos = Convert.ToInt32(command.Parameters["@Intentos"].Value);
                     }
 
                     string tipoEvento = "";
                     string mensaje = "";
-                    // Evaluar el resultado del procedimiento almacenado
-                    if (resultCode == 50006)
+
+                    if(intentos <= 5)
                     {
-                        tipoEvento = "Login No Exitoso";
-                        message = "Error, la contraseña ingresado no incide";
-                        mensaje = "Error, la contraseña ingresado no incide";
-                    }
-                    else if (resultCode == 50007)
-                    {
-                        tipoEvento = "Login No Exitoso";
-                        message = "Error, usuario no existe";
-                        mensaje = "Error, usuario no existe";
+                        // Evaluar el resultado del procedimiento almacenado
+                        if (resultCode == 50006)
+                        {
+                            tipoEvento = "Login No Exitoso";
+                            message = "Error, la contraseña ingresada no coincide";
+                            mensaje = "Error, la contraseña ingresada no coincide." +
+                                " Numero de intentos = " + intentos;
+                        }
+                        else if (resultCode == 50007)
+                        {
+                            tipoEvento = "Login No Exitoso";
+                            message = "Error, usuario no existe";
+                            mensaje = "Error, usuario no existe" +
+                                " Numero de intentos = " + intentos;
+                        }
+                        else if (resultCode == 1)
+                        {
+                            bandera = true;
+                            tipoEvento = "Login Exitoso";
+                            message = "Inicio de sesión exitoso";
+                            mensaje = "Inicio de sesión exitoso" +
+                                " Numero de intentos = " + intentos;
+                        }
+
+                        Console.WriteLine(intentos);
+                        insertar.insertarBitacoraEventos(sqlConnection, mensaje, tipoEvento, "1");
+                        // Cerrar la conexión después de haber terminado de trabajar con ella
 
                     }
-                    else if (resultCode == 1)
+                    else
                     {
-                        bandera = true;
-                        tipoEvento = "Login Exitoso";
-                        message = "Inicia de sesion exitosa";
-                        mensaje = "Inicia de sesion exitosa";
+                        Console.WriteLine(intentos);
+                        Environment.Exit(0);
                     }
-
-                    insertar.insertarBitacoraEventos(sqlConnection, mensaje, tipoEvento, "1");
-                    // Cerrar la conexión después de haber terminado de trabajar con ella
                     sqlConnection.Close();
                 }
             }
@@ -109,8 +124,6 @@ namespace tareaBases2.Pages.Project.Account
                 message = ex.Message;
                 return;
             }
-
-            Console.WriteLine();
         }
     }
 }
